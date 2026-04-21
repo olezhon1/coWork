@@ -49,6 +49,26 @@ abstract class Db
         return (int) ($this->one('SELECT SCOPE_IDENTITY() AS id')['id'] ?? 0);
     }
 
+    /**
+     * Виконує INSERT і повертає згенерований id.
+     * Використовує OUTPUT INSERTED.id — надійно працює через pdo_sqlsrv
+     * (на відміну від SCOPE_IDENTITY(), яке повертає NULL при виклику в окремому prepare-виклику).
+     */
+    protected function insertReturningId(string $sql, array $params = [], string $column = 'id'): int
+    {
+        $modified = preg_replace(
+            '/\)\s+VALUES\s*\(/i',
+            ') OUTPUT INSERTED.' . $column . ' VALUES (',
+            $sql,
+            1
+        );
+        $st = $this->db->prepare($modified);
+        $this->bind($st, $params);
+        $st->execute();
+        $row = $st->fetch(PDO::FETCH_ASSOC);
+        return (int) ($row[$column] ?? 0);
+    }
+
     public function beginTransaction(): void { $this->db->beginTransaction(); }
     public function commit(): void            { $this->db->commit(); }
     public function rollBack(): void          { if ($this->db->inTransaction()) $this->db->rollBack(); }
