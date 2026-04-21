@@ -24,7 +24,6 @@
         <div class="site-footer__col">
             <h4>Контакти</h4>
             <p class="muted">© <?= date('Y') ?> coWork.<br>Освітній демо-проєкт.</p>
-            <a href="/admin/" class="muted small">Панель адміністратора →</a>
         </div>
     </div>
 </footer>

@@ -69,7 +69,7 @@ h4 { font-size: var(--fs-md); }
 .site-header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100;
+    position: sticky; top: 0; z-index: 1200;
 }
 .site-header__top {
     display: flex; align-items: center; gap: 24px;
@@ -401,6 +401,84 @@ h4 { font-size: var(--fs-md); }
     background: var(--surface); padding: 22px;
     border: 1px solid var(--border); border-radius: var(--radius-lg);
     margin-bottom: 16px;
+}
+.side-card__head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-bottom: 12px;
+}
+.side-card__head h3 { margin: 0; }
+
+/* ─── Map (inline + fullscreen modal) ─── */
+/* Занижуємо z-index leaflet-контролів, щоб sticky header був поверх */
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom { z-index: 400 !important; }
+.cw-map-wrap { position: relative; }
+.cw-map {
+    height: 260px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+.map-expand-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; font-size: var(--fs-sm); font-weight: 500;
+    color: var(--accent-dk); background: var(--accent-lt);
+    border: 1px solid transparent; border-radius: var(--radius);
+    cursor: pointer; transition: background .15s ease, border-color .15s ease;
+}
+.map-expand-btn:hover { background: var(--surface); border-color: var(--accent); }
+.map-expand-btn span { font-size: 16px; line-height: 1; }
+
+.map-modal {
+    position: fixed; inset: 0; z-index: 2000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+}
+.map-modal[hidden] { display: none; }
+.map-modal__backdrop {
+    position: absolute; inset: 0;
+    background: rgba(28, 26, 23, .55);
+    backdrop-filter: blur(2px);
+}
+.map-modal__panel {
+    position: relative;
+    width: 80vw; height: 80vh;
+    max-width: 1400px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+}
+.map-modal__head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+}
+.map-modal__title {
+    font-family: var(--font-serif); font-size: var(--fs-lg);
+    font-weight: 600; color: var(--ink);
+}
+.map-modal__close {
+    width: 34px; height: 34px;
+    border: 1px solid var(--border); background: var(--surface);
+    border-radius: var(--radius); cursor: pointer;
+    color: var(--muted); font-size: 18px; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.map-modal__close:hover {
+    background: var(--cream-2); color: var(--ink); border-color: var(--border-2);
+}
+.map-modal__map { flex: 1; }
+
+body.modal-open { overflow: hidden; }
+
+@media (max-width: 768px) {
+    .map-modal { padding: 0; }
+    .map-modal__panel { width: 100vw; height: 100vh; border-radius: 0; }
 }
 .hours-table { width: 100%; border-collapse: collapse; font-size: var(--fs-base); }
 .hours-table td { padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--ink-2); }

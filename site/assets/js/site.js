@@ -88,7 +88,7 @@
     }
 })();
 
-// ---------- Single coworking map ----------
+// ---------- Single coworking map (+ fullscreen modal) ----------
 (function () {
     const el = document.getElementById('cw-map');
     if (!el || typeof L === 'undefined') return;
@@ -96,9 +96,44 @@
     const lng = parseFloat(el.dataset.lng);
     if (isNaN(lat) || isNaN(lng)) return;
 
-    const map = L.map(el).setView([lat, lng], 15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19, attribution: '© OpenStreetMap'
-    }).addTo(map);
-    L.marker([lat, lng]).addTo(map).bindPopup(el.dataset.name || '').openPopup();
+    function buildMap(target, zoom) {
+        const map = L.map(target).setView([lat, lng], zoom);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19, attribution: '© OpenStreetMap'
+        }).addTo(map);
+        L.marker([lat, lng]).addTo(map).bindPopup(target.dataset.name || '').openPopup();
+        return map;
+    }
+
+    buildMap(el, 15);
+
+    const modal    = document.getElementById('cw-map-modal');
+    const largeEl  = document.getElementById('cw-map-large');
+    const expand   = document.querySelector('[data-map-expand]');
+    if (!modal || !largeEl || !expand) return;
+
+    let largeMap = null;
+
+    function open() {
+        modal.hidden = false;
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        if (!largeMap) {
+            largeMap = buildMap(largeEl, 16);
+        }
+        // Leaflet must recalc size after the container becomes visible
+        setTimeout(() => largeMap.invalidateSize(), 50);
+    }
+
+    function close() {
+        modal.hidden = true;
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+    }
+
+    expand.addEventListener('click', open);
+    modal.querySelectorAll('[data-map-close]').forEach(b => b.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hidden) close();
+    });
 })();

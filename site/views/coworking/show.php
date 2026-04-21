@@ -154,11 +154,32 @@ $openNow = isOpenNow($hours, !empty($cw['is_24_7']));
 
         <?php if (!empty($cw['latitude']) && !empty($cw['longitude'])): ?>
         <div class="side-card">
-            <h3>Розташування</h3>
-            <div id="cw-map" style="height: 260px; border-radius: 12px;"
-                 data-lat="<?= e((string) $cw['latitude']) ?>"
-                 data-lng="<?= e((string) $cw['longitude']) ?>"
-                 data-name="<?= e($cw['name']) ?>"></div>
+            <div class="side-card__head">
+                <h3>Розташування</h3>
+                <button type="button" class="map-expand-btn" data-map-expand aria-label="Розгорнути карту на весь екран">
+                    <span aria-hidden="true">⤢</span> На весь екран
+                </button>
+            </div>
+            <div class="cw-map-wrap">
+                <div id="cw-map" class="cw-map"
+                     data-lat="<?= e((string) $cw['latitude']) ?>"
+                     data-lng="<?= e((string) $cw['longitude']) ?>"
+                     data-name="<?= e($cw['name']) ?>"></div>
+            </div>
+        </div>
+
+        <div id="cw-map-modal" class="map-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Карта розташування">
+            <div class="map-modal__backdrop" data-map-close></div>
+            <div class="map-modal__panel" role="document">
+                <div class="map-modal__head">
+                    <div class="map-modal__title"><?= e($cw['name']) ?></div>
+                    <button type="button" class="map-modal__close" data-map-close aria-label="Закрити">✕</button>
+                </div>
+                <div id="cw-map-large" class="map-modal__map"
+                     data-lat="<?= e((string) $cw['latitude']) ?>"
+                     data-lng="<?= e((string) $cw['longitude']) ?>"
+                     data-name="<?= e($cw['name']) ?>"></div>
+            </div>
         </div>
         <?php endif; ?>
     </aside>
