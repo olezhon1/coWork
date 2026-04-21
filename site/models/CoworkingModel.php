@@ -27,23 +27,23 @@ class CoworkingModel extends Db
      */
     public function search(array $filters = [], string $sort = 'rating', int $offset = 0, int $limit = 20): array
     {
-        [$where, $params, $joins] = $this->buildFilters($filters);
+        [$where, $whereParams, $joins, $joinParams] = $this->buildFilters($filters);
         $order = $this->buildOrder($sort);
 
         return $this->all(
             $this->baseSelect() . " {$joins} WHERE {$where}
              ORDER BY {$order}
              OFFSET ? ROWS FETCH NEXT ? ROWS ONLY",
-            [...$params, $offset, $limit]
+            [...$joinParams, ...$whereParams, $offset, $limit]
         );
     }
 
     public function count(array $filters = []): int
     {
-        [$where, $params, $joins] = $this->buildFilters($filters);
+        [$where, $whereParams, $joins, $joinParams] = $this->buildFilters($filters);
         $row = $this->one(
             "SELECT COUNT(DISTINCT c.id) AS cnt FROM coworkings c {$joins} WHERE {$where}",
-            $params
+            [...$joinParams, ...$whereParams]
         );
         return (int) ($row['cnt'] ?? 0);
     }
@@ -80,43 +80,50 @@ class CoworkingModel extends Db
         );
     }
 
+    /**
+     * @return array{0:string, 1:array, 2:string, 3:array}
+     *   [WHERE, whereParams, JOINS, joinParams]
+     *   Окремі масиви параметрів для JOIN і WHERE, оскільки в SQL `?` у JOIN
+     *   зʼявляються раніше, ніж у WHERE — тому їх не можна змішувати в один масив.
+     */
     private function buildFilters(array $f): array
     {
         $conds = ['1=1'];
-        $params = [];
+        $whereParams = [];
         $joins = '';
+        $joinParams = [];
 
         if (!empty($f['city'])) {
             $conds[] = 'c.city = ?';
-            $params[] = $f['city'];
+            $whereParams[] = $f['city'];
         }
         if (isset($f['is_24_7']) && $f['is_24_7'] !== '') {
             $conds[] = 'c.is_24_7 = ?';
-            $params[] = (int) $f['is_24_7'];
+            $whereParams[] = (int) $f['is_24_7'];
         }
         if (!empty($f['search'])) {
             $conds[] = '(c.name LIKE ? OR c.address LIKE ? OR c.city LIKE ?)';
             $s = '%' . $f['search'] . '%';
-            $params[] = $s; $params[] = $s; $params[] = $s;
+            $whereParams[] = $s; $whereParams[] = $s; $whereParams[] = $s;
         }
         if (!empty($f['workspace_type_key'])) {
             $joins .= ' INNER JOIN workspaces w_ft ON w_ft.coworking_id = c.id ';
             $conds[] = 'w_ft.type_key = ?';
-            $params[] = $f['workspace_type_key'];
+            $whereParams[] = $f['workspace_type_key'];
         }
         if (!empty($f['feature_ids']) && is_array($f['feature_ids'])) {
             foreach ($f['feature_ids'] as $idx => $fid) {
                 $alias = "cf_{$idx}";
                 $joins .= " INNER JOIN coworking_features {$alias} ON {$alias}.coworking_id = c.id AND {$alias}.feature_id = ? ";
-                $params[] = (int) $fid;
+                $joinParams[] = (int) $fid;
             }
         }
         if (!empty($f['price_max'])) {
             $conds[] = '(SELECT MIN(price_per_hour) FROM workspaces WHERE coworking_id=c.id) <= ?';
-            $params[] = (float) $f['price_max'];
+            $whereParams[] = (float) $f['price_max'];
         }
 
-        return [implode(' AND ', $conds), $params, $joins];
+        return [implode(' AND ', $conds), $whereParams, $joins, $joinParams];
     }
 
     private function buildOrder(string $sort): string
