@@ -5,11 +5,10 @@ class BookingSlotModel extends Db
 {
     public function create(int $bookingId, string $startTime, string $endTime): int
     {
-        $this->exec(
+        return $this->insertReturningId(
             'INSERT INTO booking_slots (booking_id, start_time, end_time) VALUES (?, ?, ?)',
             [$bookingId, $startTime, $endTime]
         );
-        return $this->lastId();
     }
 
     public function findByBooking(int $bookingId): array

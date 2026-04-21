@@ -34,11 +34,10 @@ class BookingModel extends Db
 
     public function create(int $userId, int $workspaceId, string $status, float $totalPrice): int
     {
-        $this->exec(
+        return $this->insertReturningId(
             'INSERT INTO bookings (user_id, workspace_id, status, total_price) VALUES (?, ?, ?, ?)',
             [$userId, $workspaceId, $status, $totalPrice]
         );
-        return $this->lastId();
     }
 
     public function cancel(int $bookingId, int $userId): bool

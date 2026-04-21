@@ -20,10 +20,9 @@ class UserModel extends Db
 
     public function register(string $fullName, string $email, string $phone, string $passwordHash): int
     {
-        $this->exec(
+        return $this->insertReturningId(
             'INSERT INTO users (full_name, email, password_hash, phone, role) VALUES (?, ?, ?, ?, ?)',
             [$fullName, $email, $passwordHash, $phone, 'user']
         );
-        return $this->lastId();
     }
 }

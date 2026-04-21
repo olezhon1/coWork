@@ -20,7 +20,7 @@ class SubscriptionModel extends Db
     public function purchase(int $userId, array $plan): int
     {
         $endDate = date('Y-m-d H:i:s', strtotime('+' . (int) $plan['duration_days'] . ' days'));
-        $this->exec(
+        return $this->insertReturningId(
             'INSERT INTO subscriptions (user_id, coworking_id, hours_left, end_date, status, plan_id)
              VALUES (?, ?, ?, ?, ?, ?)',
             [
@@ -32,6 +32,5 @@ class SubscriptionModel extends Db
                 (int) $plan['id'],
             ]
         );
-        return $this->lastId();
     }
 }
