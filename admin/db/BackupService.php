@@ -37,8 +37,16 @@ final class BackupService
         // з'єднанні, а BACKUP/RESTORE повертає проміжні rowset'и.
         $this->runWithRowsetConsume("USE [master]");
         $this->runWithRowsetConsume("ALTER DATABASE [{$db}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE");
-        $this->runWithRowsetConsume("RESTORE DATABASE [{$db}] FROM DISK = N'{$file}' WITH REPLACE");
-        $this->runWithRowsetConsume("ALTER DATABASE [{$db}] SET MULTI_USER");
+        try {
+            $this->runWithRowsetConsume("RESTORE DATABASE [{$db}] FROM DISK = N'{$file}' WITH REPLACE");
+        } finally {
+            // Гарантуємо повернення у MULTI_USER навіть при помилці RESTORE,
+            // інакше БД залишиться заблокованою для всіх наступних з'єднань.
+            $this->runWithRowsetConsume("ALTER DATABASE [{$db}] SET MULTI_USER");
+            // Повертаємо контекст поточного з'єднання на робочу БД,
+            // щоб подальший audit-INSERT не пішов у [master].
+            $this->runWithRowsetConsume("USE [{$db}]");
+        }
     }
 
     /**
