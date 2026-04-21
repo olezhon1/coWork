@@ -18,8 +18,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['admin']      = true;
             $_SESSION['admin_id']   = $user['id'];
             $_SESSION['admin_name'] = $user['full_name'];
+            require_once __DIR__ . '/db/AuditLogRepository.php';
+            (new AuditLogRepository())->log(
+                (int) $user['id'], (string) $user['full_name'],
+                'LOGIN', null, null, 'Адмін-вхід',
+            );
             redirect('/admin/');
         }
+        require_once __DIR__ . '/db/AuditLogRepository.php';
+        (new AuditLogRepository())->log(
+            null, null, 'LOGIN_FAIL', null, null,
+            'Невдала спроба входу: ' . mb_substr($email, 0, 120),
+        );
     }
     $error = 'Невірний email або пароль, або недостатньо прав.';
 }

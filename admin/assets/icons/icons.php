@@ -47,6 +47,12 @@ function icon(string $name, string $extraStyle = ''): string
         'star_filled'   => '<path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3 1.5.5-3.5L3 5.5l3.5-.5z" fill="currentColor"/>',
         'clock'         => '<circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/>',
         'location'      => '<path d="M8 2a4 4 0 100 8A4 4 0 008 2z"/><path d="M8 10v4"/>',
+        'history'       => '<circle cx="8" cy="8" r="6"/><path d="M8 4v4l2.5 1.5"/><path d="M3 3l1 2"/>',
+        'database'      => '<ellipse cx="8" cy="4" rx="5" ry="2"/><path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4"/><path d="M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>',
+        'settings'      => '<circle cx="8" cy="8" r="2.2"/><path d="M8 1.5l1 2 2-.5.5 2 2 1-1 2 1 2-2 1-.5 2-2-.5-1 2-1-2-2 .5-.5-2-2-1 1-2-1-2 2-1 .5-2 2 .5 1-2z"/>',
+        'download'      => '<path d="M8 2v8M4 7l4 4 4-4"/><path d="M3 13h10"/>',
+        'upload'        => '<path d="M8 12V4M4 7l4-4 4 4"/><path d="M3 13h10"/>',
+        'archive'       => '<rect x="2" y="3" width="12" height="3" rx="1"/><path d="M3 6v7h10V6"/><path d="M6 9h4"/>',
 
         default         => '<circle cx="8" cy="8" r="6"/>',
     };
