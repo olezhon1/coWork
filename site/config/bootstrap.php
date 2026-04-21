@@ -32,6 +32,7 @@ require_once __DIR__ . '/../models/GalleryModel.php';
 require_once __DIR__ . '/../models/OperatingHoursModel.php';
 require_once __DIR__ . '/../models/SubscriptionPlanModel.php';
 require_once __DIR__ . '/../models/SubscriptionModel.php';
+require_once __DIR__ . '/../models/AuditModel.php';
 
 // Enum-и з адмінки — переUSE'ємо
 require_once __DIR__ . '/../../admin/enums/WorkspaceType.php';

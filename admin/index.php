@@ -54,6 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
     }
 
     require_once __DIR__ . '/db/BaseRepository.php';
+    require_once __DIR__ . '/db/AuditLogRepository.php';
+    $audit = new AuditLogRepository();
+    $aUid  = (int) ($_SESSION['admin_id'] ?? 0);
+    $aUnm  = (string) ($_SESSION['admin_name'] ?? 'admin');
 
     // ── DELETE ────────────────────────────────────────────────────────────────
     if ($action === 'delete') {
@@ -64,6 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
             try {
                 require_once __DIR__ . '/db/CoworkingFeatureRepository.php';
                 (new CoworkingFeatureRepository())->delete($cwId, $ftId);
+                $audit->log($aUid, $aUnm, 'DELETE', $table->value, null,
+                    "coworking_id={$cwId}, feature_id={$ftId}");
                 flashSet(FlashType::Ok, "Зв'язок коворкінг-зручність видалено.");
             } catch (PDOException) {
                 flashSet(FlashType::Error, 'Неможливо видалити.');
@@ -74,6 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
         if ($id > 0) {
             try {
                 getRepo($table)->delete($id);
+                $audit->log($aUid, $aUnm, 'DELETE', $table->value, $id,
+                    "Видалено запис #{$id}");
                 flashSet(FlashType::Ok, 'Запис #' . $id . ' видалено.');
             } catch (PDOException) {
                 flashSet(FlashType::Error, 'Неможливо видалити: запис пов\'язаний з іншими даними.');
@@ -344,6 +352,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
             include __DIR__ . '/ui/partials/layout_foot.php';
             exit;
         }
+
+        // Логуємо успішну дію add/edit
+        $audit->log(
+            $aUid, $aUnm,
+            $action === 'add' ? 'INSERT' : 'UPDATE',
+            $table->value,
+            $id ?: null,
+            ($action === 'add' ? 'Створено запис у ' : 'Оновлено запис #' . $id . ' у ') . $table->value,
+        );
 
         redirect("/admin/?t={$table->value}");
     }
