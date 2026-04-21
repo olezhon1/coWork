@@ -1,0 +1,10 @@
+RewriteEngine On
+DirectoryIndex index.php
+
+# Direct access to existing files/directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Everything else → index.php (передає ?page= через QUERY_STRING)
+RewriteRule ^(.*)$ index.php [QSA,L]
