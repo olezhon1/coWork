@@ -72,6 +72,17 @@ class WorkspaceRepository extends BaseRepository
         );
     }
 
+    /** Для каскадного селекту: повертає w.id, w.name, w.coworking_id, c.name (коворкінг). */
+    public function allForCascade(): array
+    {
+        return $this->fetchAll(
+            "SELECT w.id, w.name, w.coworking_id, c.name AS coworking_name
+             FROM workspaces w
+             JOIN coworkings c ON c.id = w.coworking_id
+             ORDER BY c.name, w.name"
+        );
+    }
+
     private function buildFilters(array $filters): array
     {
         $conds  = ['1=1'];

@@ -20,6 +20,30 @@
       }
     });
   });
+
+  // Каскадні селекти: parent.data-child → child, фільтр за data-cw
+  document.querySelectorAll('.js-cascade-parent').forEach(parent => {
+    const childId = parent.dataset.child;
+    if (!childId) return;
+    const child = document.getElementById(childId);
+    if (!child) return;
+
+    const applyFilter = () => {
+      const cwId = parent.value;
+      let currentValid = false;
+      Array.from(child.options).forEach(opt => {
+        if (!opt.value) { opt.hidden = false; return; }          // placeholder завжди видимий
+        const matches = !cwId || opt.dataset.cw === cwId;
+        opt.hidden    = !matches;
+        opt.disabled  = !matches;
+        if (matches && opt.value === child.value) currentValid = true;
+      });
+      if (!currentValid) child.value = '';
+    };
+
+    parent.addEventListener('change', applyFilter);
+    applyFilter(); // на завантаженні форми (важливо для режиму редагування)
+  });
 </script>
 </body>
 </html>

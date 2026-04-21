@@ -327,10 +327,6 @@ function loadFilterOptions(string $source): array {
                 </form>
 
               <?php else: ?>
-                <a href="/admin/?t=<?= h($table->value) ?>&a=view&id=<?= h((string)$row['id']) ?>"
-                   class="btn btn-sm btn-icon btn-ghost" title="Переглянути">
-                  <?= icon('view') ?>
-                </a>
                 <form method="post"
                       action="/admin/?t=<?= h($table->value) ?>&a=delete&id=<?= h((string)$row['id']) ?>"
                       class="js-delete-form" style="display:inline;">
