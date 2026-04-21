@@ -443,7 +443,42 @@ h4 { font-size: var(--fs-md); }
     border: 1px solid var(--border); border-radius: var(--radius-lg);
     margin-top: 20px;
 }
-.review-form h3 { margin-top: 0; }
+.review-form h3 { margin-top: 0; margin-bottom: 14px; }
+.review-form .field { margin-bottom: 14px; }
+.review-form .field__label {
+    display: block; margin-bottom: 6px;
+    font-size: 13px; color: var(--muted); font-weight: 500;
+}
+.review-form textarea {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); color: var(--ink);
+    font-family: inherit; font-size: 14px; line-height: 1.5;
+    resize: vertical;
+}
+.review-form textarea:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-lt);
+}
+
+/* ─── Interactive star rating (5→1 DOM order) ─── */
+.rating-input {
+    display: inline-flex; flex-direction: row-reverse;
+    gap: 4px; font-size: 28px; line-height: 1;
+}
+.rating-input input { position: absolute; opacity: 0; pointer-events: none; }
+.rating-input label {
+    cursor: pointer; color: var(--border-2);
+    transition: color .12s ease, transform .12s ease;
+    user-select: none;
+}
+.rating-input label:hover,
+.rating-input label:hover ~ label,
+.rating-input input:checked ~ label { color: var(--amber); }
+.rating-input label:hover { transform: scale(1.1); }
+.rating-input input:focus-visible + label {
+    outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px;
+}
 
 /* ============ FILTER BAR ============ */
 .filter-bar {
