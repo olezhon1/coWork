@@ -105,23 +105,26 @@ $openNow = isOpenNow($hours, !empty($cw['is_24_7']));
                 <input type="hidden" name="coworking_id" value="<?= (int) $cw['id'] ?>">
                 <h3>Залишити відгук</h3>
                 <div class="field">
-                    <label>Оцінка</label>
-                    <select name="rating">
+                    <label class="field__label">Ваша оцінка</label>
+                    <div class="rating-input" role="radiogroup" aria-label="Оцінка від 1 до 5">
                         <?php for ($i = 5; $i >= 1; $i--): ?>
-                            <option value="<?= $i ?>"><?= str_repeat('★', $i) . str_repeat('☆', 5 - $i) ?> (<?= $i ?>)</option>
+                            <input type="radio" name="rating" id="rating-<?= $i ?>" value="<?= $i ?>" <?= $i === 5 ? 'checked' : '' ?>>
+                            <label for="rating-<?= $i ?>" title="<?= $i ?> з 5" aria-label="<?= $i ?> з 5">★</label>
                         <?php endfor; ?>
-                    </select>
+                    </div>
                 </div>
                 <div class="field">
-                    <label>Коментар</label>
-                    <textarea name="comment" rows="4" required></textarea>
+                    <label class="field__label" for="review-comment">Коментар</label>
+                    <textarea id="review-comment" name="comment" rows="4" required placeholder="Розкажіть, що сподобалось, а що можна покращити"></textarea>
                 </div>
-                <button type="submit" class="btn btn--primary">Надіслати</button>
+                <button type="submit" class="btn btn--primary">Надіслати відгук</button>
             </form>
         <?php elseif ($alreadyReviewed): ?>
             <p class="muted small">Ви вже залишали відгук для цього коворкінгу.</p>
-        <?php elseif (Auth::check()): ?>
-            <p class="muted small">Залишати відгук можуть лише користувачі, які мали тут бронювання.</p>
+        <?php else: ?>
+            <p class="muted small">
+                <a href="<?= siteUrl('login') ?>">Увійдіть</a>, щоб залишити відгук.
+            </p>
         <?php endif; ?>
     </div>
 

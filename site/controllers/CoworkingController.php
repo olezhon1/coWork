@@ -17,14 +17,11 @@ class CoworkingController extends Controller
         $workspaces = (new WorkspaceModel())->findByCoworking($id);
         $reviews    = (new ReviewModel())->findByCoworking($id, 50);
 
-        $canReview = false;
         $alreadyReviewed = false;
         if (Auth::check()) {
-            $bm = new BookingModel();
-            $rm = new ReviewModel();
-            $canReview = $bm->userHasBookingInCoworking(Auth::id(), $id);
-            $alreadyReviewed = $rm->userHasReviewedCoworking(Auth::id(), $id);
+            $alreadyReviewed = (new ReviewModel())->userHasReviewedCoworking(Auth::id(), $id);
         }
+        $canReview = Auth::check() && !$alreadyReviewed;
 
         $this->render('coworking/show', [
             'title'            => $cw['name'],
@@ -34,7 +31,7 @@ class CoworkingController extends Controller
             'features'         => $features,
             'workspaces'       => $workspaces,
             'reviews'          => $reviews,
-            'canReview'        => $canReview && !$alreadyReviewed,
+            'canReview'        => $canReview,
             'alreadyReviewed'  => $alreadyReviewed,
         ]);
     }
