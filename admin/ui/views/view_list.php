@@ -237,7 +237,7 @@ function loadFilterOptions(string $source): array {
       <tr>
         <?php foreach ($columns as $col): ?>
           <?php
-            $sortKey = match($table) {
+            $sortMap = match($table) {
                 AdminTable::Users         => ['id'=>'id','full_name'=>'full_name','created_at'=>'created_at'],
                 AdminTable::Coworkings    => ['id'=>'id','name'=>'name','city'=>'city','created_at'=>'created_at'],
                 AdminTable::Workspaces    => ['id'=>'w.id','name'=>'w.name','price_per_hour'=>'w.price_per_hour','capacity'=>'w.capacity'],
@@ -246,7 +246,8 @@ function loadFilterOptions(string $source): array {
                 AdminTable::Subscriptions => ['id'=>'s.id','hours_left'=>'s.hours_left','end_date'=>'s.end_date'],
                 AdminTable::Reviews       => ['id'=>'r.id','rating'=>'r.rating','created_at'=>'r.created_at'],
                 default                   => [],
-            }[$col] ?? null;
+            };
+            $sortKey = $sortMap[$col] ?? null;
             $isSortable = $sortKey !== null;
             $isActive   = $curSort === $sortKey;
           ?>

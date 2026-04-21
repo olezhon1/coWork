@@ -43,7 +43,7 @@ $cssVars = require __DIR__ . '/assets/css/variables.php';
     .form-group{margin-bottom:.875rem}
     .form-label{font-size:var(--fs-xs);color:var(--text2);font-weight:500;display:block;margin-bottom:.35rem}
     input[type=email],input[type=password]{width:100%;padding:.55rem .9rem;font-size:var(--fs-sm);border:1px solid var(--border2);border-radius:var(--radius);background:var(--surface);color:var(--text);font-family:inherit}
-    input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(139,115,85,.12)}
+    input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,107,85,.15)}
     .btn-submit{width:100%;padding:.6rem 1rem;font-size:var(--fs-base);font-weight:500;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;font-family:inherit;transition:.12s;margin-top:.5rem}
     .btn-submit:hover{background:var(--accent-dk)}
     .err{background:var(--red-lt);color:var(--red);padding:.625rem .9rem;border-radius:var(--radius);font-size:var(--fs-sm);margin-bottom:.875rem;border:1px solid #E0BCBC}

@@ -1,0 +1,126 @@
+/* ============================================================
+   coWork — спільні токени дизайн-системи «Warm Minimal».
+   Підключається і адмінкою, і публічним сайтом.
+   Єдине джерело правди для кольорів, типографіки, розмірів.
+   ============================================================ */
+
+:root {
+  /* ── BASE PALETTE (Warm Minimal) ───────────────────────── */
+  --cream:       #F7F4EF;   /* фон сторінки */
+  --cream-2:     #EFEAE0;   /* другорядний фон, hover */
+  --cream-3:     #E6DED1;   /* роздільники секцій */
+  --surface:     #FFFDF8;   /* поверхня карток */
+  --surface-2:   #FBF8F1;   /* hover-стан карток */
+  --ink:         #1C1A17;   /* основний текст */
+  --ink-2:       #3A3630;   /* менш контрастний текст */
+  --muted:       #7B756D;   /* placeholder, мета */
+  --muted-2:     #A7A099;   /* delicate */
+  --border:      #E2DACE;   /* стандартний бордер */
+  --border-2:    #CEC3B1;   /* контрастний бордер */
+
+  /* ── ACCENTS ───────────────────────────────────────────── */
+  --accent:      #2F6B55;   /* глибокий зелений — primary CTA */
+  --accent-dk:   #234F40;   /* hover/active */
+  --accent-lt:   #E4EDE8;   /* фон/chip */
+  --warm:        #C2662B;   /* теракотовий — secondary accent */
+  --warm-dk:     #8F4816;
+  --warm-lt:     #F6E9DD;
+
+  /* ── SEMANTIC ──────────────────────────────────────────── */
+  --green:       #4A7A3E;
+  --green-lt:    #E8F0E1;
+  --red:         #A63437;
+  --red-lt:      #F6E3E3;
+  --amber:       #B07620;
+  --amber-lt:    #F4E8D4;
+  --blue:        #3A6A8A;
+  --blue-lt:     #E3ECF3;
+
+  /* ── TYPOGRAPHY ────────────────────────────────────────── */
+  --font-sans:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif:  'IBM Plex Serif', 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-mono:   'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  --fs-xs:       11px;
+  --fs-sm:       13px;
+  --fs-base:     14px;
+  --fs-md:       15px;
+  --fs-lg:       17px;
+  --fs-xl:       20px;
+  --fs-2xl:      24px;
+  --fs-3xl:      32px;
+  --fs-4xl:      44px;
+
+  --lh-tight:    1.2;
+  --lh-normal:   1.55;
+
+  /* ── RADII ─────────────────────────────────────────────── */
+  --radius-xs:   4px;
+  --radius-sm:   6px;
+  --radius:      8px;
+  --radius-md:   10px;
+  --radius-lg:   12px;
+  --radius-xl:   18px;
+  --radius-pill: 999px;
+
+  /* ── SHADOWS ───────────────────────────────────────────── */
+  --shadow-xs:   0 1px 2px rgba(28,26,23,.04);
+  --shadow-sm:   0 1px 4px rgba(28,26,23,.05);
+  --shadow-md:   0 4px 16px rgba(28,26,23,.07);
+  --shadow-lg:   0 12px 36px rgba(28,26,23,.10);
+
+  /* ── MOTION ────────────────────────────────────────────── */
+  --t-fast:      .12s ease;
+  --t-med:       .2s ease;
+
+  /* ── LAYOUT ────────────────────────────────────────────── */
+  --max-w:       1200px;
+  --max-w-wide:  1280px;
+
+  /* ── ADMIN ALIASES (legacy names) ──────────────────────── */
+  --bg:          var(--cream);
+  --bg2:         var(--cream-2);
+  --bg3:         var(--cream-3);
+  --bg4:         #D8CCB8;
+  --surface2:    var(--surface-2);
+  --border2:     var(--border-2);
+  --text:        var(--ink);
+  --text2:       var(--ink-2);
+  --text3:       var(--muted);
+
+  /* ── SITE ALIASES (legacy names) ───────────────────────── */
+  --c-bg:        var(--cream);
+  --c-surface:   var(--surface);
+  --c-text:      var(--ink);
+  --c-muted:     var(--muted);
+  --c-border:    var(--border);
+  --c-primary:   var(--accent);
+  --c-primary-2: var(--accent-dk);
+  --c-accent:    var(--warm);
+  --c-amber:     var(--amber);
+  --c-green:     var(--green);
+  --c-red:       var(--red);
+  --c-gray:      var(--muted-2);
+  --shadow:      var(--shadow-sm);
+
+  --header-h:    128px;
+}
+
+/* Global typography reset */
+html, body {
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background: var(--cream);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+::selection {
+  background: var(--accent-lt);
+  color: var(--accent-dk);
+}
