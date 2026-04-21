@@ -108,6 +108,15 @@ class BookingController extends Controller
             return;
         }
 
+        (new AuditModel())->log(
+            Auth::id(),
+            (string) ($_SESSION['user_name'] ?? ''),
+            'INSERT',
+            'bookings',
+            $bookingId,
+            "Створено бронювання #{$bookingId} ({$startSql} — {$endSql}, {$totalPrice} ₴)",
+        );
+
         flash('ok', 'Бронювання створено. Статус: очікує підтвердження.');
         Response::redirect(siteUrl('profile'));
     }

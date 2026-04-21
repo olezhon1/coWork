@@ -11,11 +11,19 @@ $navGroups = [
         AdminTable::OperatingHours, AdminTable::Features,
         AdminTable::CoworkingFeatures, AdminTable::Gallery,
     ]],
-    'service' => ['label' => 'Сервіс',      'tables' => [
+    'service' => ['label' => 'Операції',     'tables' => [
         AdminTable::Bookings, AdminTable::BookingSlots,
         AdminTable::Subscriptions, AdminTable::Reviews,
     ]],
 ];
+
+// Додаткові системні посилання (не таблиці, окремі сторінки)
+$adminLinks = [
+    ['url' => '/admin/audit_log.php', 'icon' => 'history',  'label' => 'Журнал дій'],
+    ['url' => '/admin/service.php',   'icon' => 'database', 'label' => 'Сервіс'],
+    ['url' => '/admin/settings.php',  'icon' => 'settings', 'label' => 'Налаштування'],
+];
+$activeAdmin = $activeAdmin ?? null; // 'audit' | 'service' | 'settings' | null
 ?>
 <!DOCTYPE html>
 <html lang="uk">
@@ -63,6 +71,17 @@ $navGroups = [
           <?= icon($t->icon()) ?> <?= h($t->label()) ?>
         </a>
       <?php endforeach ?>
+    <?php endforeach ?>
+
+    <div class="sn-sect">Адміністрування</div>
+    <?php foreach ($adminLinks as $lnk):
+        $slug = basename($lnk['url'], '.php');
+        $isActive = ($activeAdmin === $slug) ||
+                    ($activeAdmin === 'audit' && $slug === 'audit_log');
+    ?>
+      <a href="<?= h($lnk['url']) ?>" class="sn-item <?= $isActive ? 'active' : '' ?>">
+        <?= icon($lnk['icon']) ?> <?= h($lnk['label']) ?>
+      </a>
     <?php endforeach ?>
   </aside>
 
