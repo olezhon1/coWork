@@ -392,26 +392,6 @@ if ($table === null) {
 $activeTable = $table;
 $pageTitle   = $table->label();
 
-// VIEW (тільки для read-only)
-if ($action === 'view' && $id > 0) {
-    require_once __DIR__ . '/db/BaseRepository.php';
-    $row = getRepo($table)->findById($id);
-    if (!$row) {
-        $pageTitle = WarnReason::RecordNotFound->title();
-        include __DIR__ . '/ui/partials/layout_head.php';
-        $warnReason = WarnReason::RecordNotFound; $warnBackUrl = "/admin/?t={$table->value}";
-        $warnBackLabel = 'Назад до списку'; $warnDetails = ["ID: {$id}"]; $warnAction = null;
-        include __DIR__ . '/ui/views/view_warning.php';
-        include __DIR__ . '/ui/partials/layout_foot.php';
-        exit;
-    }
-    $editRow = $row; $action = 'edit';
-    include __DIR__ . '/ui/partials/layout_head.php';
-    include __DIR__ . '/ui/views/view_form.php';
-    include __DIR__ . '/ui/partials/layout_foot.php';
-    exit;
-}
-
 // ADD / EDIT
 if (in_array($action, ['add', 'edit'])) {
     if ($table->isReadOnly()) redirect("/admin/?t={$table->value}");
