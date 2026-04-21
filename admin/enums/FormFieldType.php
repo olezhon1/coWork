@@ -15,6 +15,7 @@ enum FormFieldType: string
     case Checkbox           = 'checkbox';
     case SelectCoworkings   = 'select_coworkings';
     case SelectWorkspaces   = 'select_workspaces';
+    case SelectWorkspaceCascade = 'select_workspace_cascade';
     case SelectFeatures     = 'select_features';
     case SelectBookings     = 'select_bookings';
     case SelectUsers        = 'select_users';
@@ -32,7 +33,8 @@ enum FormFieldType: string
     {
         return match($this) {
             self::Select, self::SelectCoworkings, self::SelectWorkspaces,
-            self::SelectFeatures, self::SelectBookings, self::SelectUsers => true,
+            self::SelectWorkspaceCascade, self::SelectFeatures,
+            self::SelectBookings, self::SelectUsers => true,
             default => false,
         };
     }

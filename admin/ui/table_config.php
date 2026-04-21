@@ -76,11 +76,11 @@ function tableFormConfig(AdminTable $table): array
         ],
 
         AdminTable::Bookings => [
-            'user_id'      => ['type' => FormFieldType::SelectUsers,     'label' => 'Користувач',     'req' => true, 'span' => 'full'],
-            'workspace_id' => ['type' => FormFieldType::SelectWorkspaces,'label' => 'Робоче місце',   'req' => true, 'span' => 'full'],
-            'status'       => ['type' => FormFieldType::Select,          'label' => 'Статус',         'req' => false,
+            'user_id'      => ['type' => FormFieldType::SelectUsers,            'label' => 'Користувач',    'req' => true, 'span' => 'full'],
+            'workspace_id' => ['type' => FormFieldType::SelectWorkspaceCascade, 'label' => 'Робоче місце',  'req' => true, 'span' => 'full'],
+            'status'       => ['type' => FormFieldType::Select,                 'label' => 'Статус',        'req' => false,
                                'options' => BookingStatus::options()],
-            'total_price'  => ['type' => FormFieldType::Number,          'label' => 'Загальна сума, грн','req' => false],
+            'total_price'  => ['type' => FormFieldType::Number,                 'label' => 'Загальна сума, грн','req' => false],
         ],
 
         AdminTable::BookingSlots => [
@@ -114,6 +114,14 @@ function loadSelectOptions(FormFieldType $type): array
         FormFieldType::SelectWorkspaces => (function () {
             require_once __DIR__ . '/../db/WorkspaceRepository.php';
             return array_column((new WorkspaceRepository())->allForSelect(), 'label', 'id');
+        })(),
+        FormFieldType::SelectWorkspaceCascade => (function () {
+            require_once __DIR__ . '/../db/WorkspaceRepository.php';
+            require_once __DIR__ . '/../db/CoworkingRepository.php';
+            return [
+                'coworkings' => array_column((new CoworkingRepository())->allForSelect(), 'name', 'id'),
+                'workspaces' => (new WorkspaceRepository())->allForCascade(),
+            ];
         })(),
         FormFieldType::SelectFeatures => (function () {
             require_once __DIR__ . '/../db/FeatureRepository.php';
