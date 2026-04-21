@@ -12,15 +12,13 @@ class ReviewController extends Controller
         $rating      = max(1, min(5, Request::int('rating', 5)));
         $comment     = trim((string) Request::post('comment', ''));
 
-        if ($coworkingId <= 0 || $comment === '') {
-            flash('err', 'Будь ласка, заповніть коментар');
+        if ($coworkingId <= 0) {
+            flash('err', 'Не вказано коворкінг');
             Response::back();
             return;
         }
-
-        $bm = new BookingModel();
-        if (!$bm->userHasBookingInCoworking(Auth::id(), $coworkingId)) {
-            flash('err', 'Залишати відгук можуть лише користувачі, які мали бронювання тут');
+        if ($comment === '') {
+            flash('err', 'Будь ласка, заповніть коментар');
             Response::redirect(siteUrl('coworking', ['id' => $coworkingId]));
             return;
         }
