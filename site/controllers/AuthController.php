@@ -30,6 +30,10 @@ class AuthController extends Controller
                 $errors['general'] = 'Невірний email або пароль';
             } else {
                 Auth::login((int) $user['id'], (string) ($user['role'] ?? 'user'), (string) $user['full_name']);
+                (new AuditModel())->log(
+                    (int) $user['id'], (string) $user['full_name'],
+                    'LOGIN', null, null, 'Вхід на сайт',
+                );
                 flash('ok', 'Ви увійшли');
                 Response::redirect($return);
                 return;
@@ -80,6 +84,10 @@ class AuthController extends Controller
             $hash = password_hash($password, PASSWORD_BCRYPT);
             $id = $um->register($fullName, $email, $phone, $hash);
             Auth::login($id, 'user', $fullName);
+            (new AuditModel())->log(
+                $id, $fullName, 'REGISTER', 'users', $id,
+                "Реєстрація користувача: {$email}",
+            );
             flash('ok', 'Реєстрація успішна. Вітаємо в coWork!');
             Response::redirect(siteUrl('home'));
             return;
@@ -94,8 +102,13 @@ class AuthController extends Controller
 
     public function logout(): void
     {
+        $uid = Auth::id();
+        $uname = $_SESSION['user_name'] ?? null;
         Auth::logout();
         session_start();
+        if ($uid) {
+            (new AuditModel())->log($uid, (string) $uname, 'LOGOUT', null, null, 'Вихід із сайту');
+        }
         flash('ok', 'Ви вийшли з акаунту');
         Response::redirect(siteUrl('home'));
     }
