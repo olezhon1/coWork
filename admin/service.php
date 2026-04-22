@@ -57,16 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
             }
 
-            case 'copy': {
-                $fileName = 'cowork_copy_' . date('Ymd_His') . '.bak';
-                $full = rtrim($backupDir, '/\\') . '/' . $fileName;
-                $svc->exportCopy($full);
-                $audit->log($adminId, $adminName, 'BACKUP', null, null,
-                    "Створено копію БД для перенесення: {$full}");
-                flashSet(FlashType::Ok, 'Копію БД для перенесення створено: ' . $full);
-                break;
-            }
-
             case 'archive_table': {
                 $table = (string) ($_POST['archive_table'] ?? '');
                 $allowed = ['users','coworkings','workspaces','bookings','booking_slots',
@@ -187,19 +177,6 @@ include __DIR__ . '/ui/partials/layout_head.php';
       <span>Я підтверджую <strong>повну заміну</strong> поточної БД даними з архіву.</span>
     </label>
     <button type="submit" class="btn btn-danger"><?= icon('upload') ?> Відновити БД</button>
-  </form>
-
-  <!-- ── COPY ──────────────────────────────────────────────────────────────── -->
-  <form method="post" class="card js-confirm-form"
-        data-confirm="Створити копію БД для перенесення на інше робоче місце?">
-    <div class="card-title"><?= icon('database') ?> Копія для перенесення</div>
-    <div class="card-sub">Створює окремий .bak-файл, який можна перенести на інший сервер.</div>
-    <input type="hidden" name="op" value="copy">
-    <label class="checkline">
-      <input type="checkbox" name="confirm" value="yes" required>
-      <span>Створити копію БД.</span>
-    </label>
-    <button type="submit" class="btn btn-accent"><?= icon('database') ?> Створити копію</button>
   </form>
 
   <!-- ── ARCHIVE TABLE ─────────────────────────────────────────────────────── -->
