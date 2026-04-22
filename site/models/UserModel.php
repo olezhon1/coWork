@@ -25,4 +25,20 @@ class UserModel extends Db
             [$fullName, $email, $passwordHash, $phone, 'user']
         );
     }
+
+    public function updateProfile(int $id, string $fullName, string $email, string $phone): void
+    {
+        $this->exec(
+            'UPDATE users SET full_name = ?, email = ?, phone = ? WHERE id = ?',
+            [$fullName, $email, $phone, $id]
+        );
+    }
+
+    public function updatePassword(int $id, string $passwordHash): void
+    {
+        $this->exec(
+            'UPDATE users SET password_hash = ? WHERE id = ?',
+            [$passwordHash, $id]
+        );
+    }
 }
