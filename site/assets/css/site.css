@@ -637,6 +637,22 @@ body.modal-open { overflow: hidden; }
     font-weight: 600; font-size: var(--fs-2xl);
     letter-spacing: -0.01em;
 }
+.profile-forms {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px; margin-bottom: 32px;
+}
+.profile-card {
+    background: var(--surface); padding: 24px 26px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: flex; flex-direction: column; gap: 14px;
+}
+.profile-card h2 {
+    font-family: var(--font-serif);
+    font-size: var(--fs-xl); font-weight: 600;
+    margin: 0; letter-spacing: -0.01em;
+}
+.profile-card p.muted { margin: 0; }
 /* ============ FOOTER ============ */
 .site-footer {
     background: var(--ink); color: #C4BDB1;

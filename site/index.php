@@ -42,6 +42,12 @@ $routes = [
     'profile' => [
         'GET'  => [ProfileController::class, 'index'],
     ],
+    'profile_update' => [
+        'POST' => [ProfileController::class, 'update'],
+    ],
+    'profile_password' => [
+        'POST' => [ProfileController::class, 'updatePassword'],
+    ],
     'cancel_booking' => [
         'POST' => [ProfileController::class, 'cancelBooking'],
     ],
