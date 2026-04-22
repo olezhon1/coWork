@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
 
             if ($action === 'add') {
                 if (strlen($pass) < 8) {
-                    $warnReason  = WarnReason::InvalidTimeRange; // перевикористовуємо, або можна додати новий
+                    $warnReason  = WarnReason::WeakPassword;
                     $warnDetails = ['Пароль повинен містити мінімум 8 символів.'];
                 } else {
                     $hash = password_hash($pass, PASSWORD_BCRYPT);
@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
                 $repo->update($id, $fullName, $email, $phone, $role->value);
                 if ($pass !== '') {
                     if (strlen($pass) < 8) {
-                        $warnReason  = WarnReason::InvalidTimeRange;
+                        $warnReason  = WarnReason::WeakPassword;
                         $warnDetails = ['Пароль повинен містити мінімум 8 символів.'];
                     } else {
                         $hash = password_hash($pass, PASSWORD_BCRYPT);

@@ -39,7 +39,23 @@ function isLoggedIn(): bool
 function currentAdminRole(): ?UserRole
 {
     $raw = $_SESSION['admin_role'] ?? null;
-    return $raw ? UserRole::tryFrom((string)$raw) : null;
+    if ($raw) {
+        return UserRole::tryFrom((string)$raw);
+    }
+    // Бекфіл для сесій, створених до введення ролей (admin_id є, admin_role нема).
+    $uid = (int) ($_SESSION['admin_id'] ?? 0);
+    if ($uid > 0) {
+        require_once __DIR__ . '/../db/UserRepository.php';
+        $user = (new UserRepository())->findById($uid);
+        if ($user) {
+            $role = UserRole::tryFrom((string) $user['role']);
+            if ($role && $role->canAccessAdmin()) {
+                $_SESSION['admin_role'] = $role->value;
+                return $role;
+            }
+        }
+    }
+    return null;
 }
 
 /** Гейт для системних розділів (Сервіс, Налаштування, Журнал дій). */
