@@ -11,6 +11,7 @@ enum WarnReason: string
     case InvalidTimeRange      = 'invalid_time_range';
     case DeleteFailed          = 'delete_failed';
     case ValidationFailed      = 'validation_failed';
+    case WeakPassword          = 'weak_password';
 
     public function title(): string
     {
@@ -23,6 +24,7 @@ enum WarnReason: string
             self::InvalidTimeRange      => 'Некоректний часовий діапазон',
             self::DeleteFailed          => 'Помилка видалення',
             self::ValidationFailed      => 'Помилка валідації',
+            self::WeakPassword          => 'Некоректний пароль',
         };
     }
 
@@ -37,6 +39,7 @@ enum WarnReason: string
             self::InvalidTimeRange      => 'Час початку не може бути пізніше або рівним часу кінця.',
             self::DeleteFailed          => 'Не вдалося видалити запис. Можливо, він пов\'язаний з іншими даними.',
             self::ValidationFailed      => 'Дані не пройшли перевірку. Виправте помилки та спробуйте ще раз.',
+            self::WeakPassword          => 'Пароль не відповідає вимогам безпеки.',
         };
     }
 }
