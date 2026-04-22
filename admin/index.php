@@ -93,6 +93,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
                     $slotBookingId = $existingSlot ? (int) $existingSlot['booking_id'] : null;
                 }
 
+                // Журнал ведемо тільки для змін над адмінами/контент-менеджерами.
+                // Якщо видаляємо звичайного користувача сайту — не засмічуємо лог.
+                $skipAudit = false;
+                if ($table === AdminTable::Users) {
+                    require_once __DIR__ . '/db/UserRepository.php';
+                    $victim = (new UserRepository())->findById($id);
+                    $victimRole = $victim ? UserRole::tryFrom((string) $victim['role']) : null;
+                    $skipAudit = !$victimRole || !$victimRole->canAccessAdmin();
+                }
+
                 getRepo($table)->delete($id);
 
                 if ($slotBookingId !== null) {
@@ -100,8 +110,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
                     (new BookingRepository())->recalcTotalPrice($slotBookingId);
                 }
 
-                $audit->log($aUid, $aUnm, 'DELETE', $table->value, $id,
-                    "Видалено запис #{$id}");
+                if (!$skipAudit) {
+                    $audit->log($aUid, $aUnm, 'DELETE', $table->value, $id,
+                        "Видалено запис #{$id}");
+                }
                 flashSet(FlashType::Ok, 'Запис #' . $id . ' видалено.');
             } catch (PDOException) {
                 flashSet(FlashType::Error, 'Неможливо видалити: запис пов\'язаний з іншими даними.');
@@ -114,6 +126,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
     if (in_array($action, ['add', 'edit'])) {
         $warnReason  = null;
         $warnDetails = [];
+        // За замовчуванням пишемо у журнал. Нижче можемо вимкнути для
+        // CRUD над звичайними site-юзерами (role=user).
+        $skipAudit   = false;
 
         // ── Users ─────────────────────────────────────────────────────────────
         if ($table === AdminTable::Users) {
@@ -125,6 +140,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
             $roleRaw  = trim($_POST['role'] ?? 'user');
             $role     = UserRole::tryFrom($roleRaw) ?? UserRole::User;
             $pass     = $_POST['password'] ?? '';
+
+            // При edit — розглядаємо і стару, і нову роль: якщо обидві —
+            // звичайні користувачі, зміна не потрапляє до журналу.
+            $prevRole = null;
+            if ($action === 'edit') {
+                $prev     = $repo->findById($id);
+                $prevRole = $prev ? UserRole::tryFrom((string) $prev['role']) : null;
+            }
+            $touchesStaff = $role->canAccessAdmin()
+                || ($prevRole !== null && $prevRole->canAccessAdmin());
+            $skipAudit    = !$touchesStaff;
 
             if ($action === 'add') {
                 if (strlen($pass) < 8) {
@@ -371,14 +397,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
             exit;
         }
 
-        // Логуємо успішну дію add/edit
-        $audit->log(
-            $aUid, $aUnm,
-            $action === 'add' ? 'INSERT' : 'UPDATE',
-            $table->value,
-            $id ?: null,
-            ($action === 'add' ? 'Створено запис у ' : 'Оновлено запис #' . $id . ' у ') . $table->value,
-        );
+        // Логуємо успішну дію add/edit (крім керування звичайними site-юзерами).
+        if (!$skipAudit) {
+            $audit->log(
+                $aUid, $aUnm,
+                $action === 'add' ? 'INSERT' : 'UPDATE',
+                $table->value,
+                $id ?: null,
+                ($action === 'add' ? 'Створено запис у ' : 'Оновлено запис #' . $id . ' у ') . $table->value,
+            );
+        }
 
         redirect("/admin/?t={$table->value}");
     }
