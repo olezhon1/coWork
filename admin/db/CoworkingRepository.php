@@ -36,20 +36,20 @@ class CoworkingRepository extends BaseRepository
         return $this->fetchAll('SELECT DISTINCT city FROM coworkings WHERE city IS NOT NULL AND city <> \'\' ORDER BY city');
     }
 
-    public function create(string $name, string $address, string $city, string $description, int $is24_7): int
+    public function create(string $name, string $address, string $city, string $description, int $is24_7, ?float $latitude = null, ?float $longitude = null): int
     {
         $this->execute(
-            'INSERT INTO coworkings (name, address, city, description, is_24_7) VALUES (?, ?, ?, ?, ?)',
-            [$name, $address, $city, $description, $is24_7]
+            'INSERT INTO coworkings (name, address, city, description, is_24_7, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [$name, $address, $city, $description, $is24_7, $latitude, $longitude]
         );
         return $this->lastId();
     }
 
-    public function update(int $id, string $name, string $address, string $city, string $description, int $is24_7): void
+    public function update(int $id, string $name, string $address, string $city, string $description, int $is24_7, ?float $latitude = null, ?float $longitude = null): void
     {
         $this->execute(
-            'UPDATE coworkings SET name=?, address=?, city=?, description=?, is_24_7=? WHERE id=?',
-            [$name, $address, $city, $description, $is24_7, $id]
+            'UPDATE coworkings SET name=?, address=?, city=?, description=?, is_24_7=?, latitude=?, longitude=? WHERE id=?',
+            [$name, $address, $city, $description, $is24_7, $latitude, $longitude, $id]
         );
     }
 

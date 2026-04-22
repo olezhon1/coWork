@@ -71,6 +71,35 @@ class BookingRepository extends BaseRepository
         $this->execute('UPDATE bookings SET status=? WHERE id=?', [$status->value, $id]);
     }
 
+    /**
+     * Перераховує total_price як (сума тривалостей усіх слотів у годинах) × price_per_hour воркспейсу.
+     * Викликається після будь-якої зміни в booking_slots.
+     */
+    public function recalcTotalPrice(int $bookingId): void
+    {
+        $this->execute(
+            "UPDATE b
+             SET total_price = ROUND(
+                 ISNULL((
+                     SELECT SUM(DATEDIFF(SECOND, bs.start_time, bs.end_time) / 3600.0)
+                     FROM booking_slots bs
+                     WHERE bs.booking_id = b.id
+                 ), 0) * ISNULL(w.price_per_hour, 0),
+                 2
+             )
+             FROM bookings b
+             JOIN workspaces w ON w.id = b.workspace_id
+             WHERE b.id = ?",
+            [$bookingId]
+        );
+    }
+
+    public function getTotalPrice(int $id): float
+    {
+        $row = $this->fetchOne('SELECT total_price FROM bookings WHERE id = ?', [$id]);
+        return (float) ($row['total_price'] ?? 0);
+    }
+
     public function delete(int $id): void
     {
         $this->execute('DELETE FROM bookings WHERE id = ?', [$id]);
