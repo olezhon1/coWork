@@ -70,15 +70,6 @@ final class BackupService
     }
 
     /**
-     * Створює копію БД (для перенесення на інше робоче місце) через BACKUP у файл.
-     * Фактично — еквівалент backupDatabase, окремий метод залишаю для семантики.
-     */
-    public function exportCopy(string $filePath): void
-    {
-        $this->backupDatabase($filePath);
-    }
-
-    /**
      * Архівує (експортує) одну таблицю у CSV-файл на сервері застосунку.
      * Повертає кількість рядків, що потрапили в файл.
      */
