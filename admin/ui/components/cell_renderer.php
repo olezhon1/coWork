@@ -21,11 +21,6 @@ function renderCell(AdminTable $table, string $col, array $row): string
             return '<span class="badge ' . h($e->badgeClass()) . '">' . h($e->label()) . '</span>';
         })(),
 
-        $col === 'status' && $table === AdminTable::Subscriptions && SubscriptionStatus::tryFrom($str) !== null => (function () use ($str): string {
-            $e = SubscriptionStatus::from($str);
-            return '<span class="badge ' . h($e->badgeClass()) . '">' . h($e->label()) . '</span>';
-        })(),
-
         // ── Роль користувача ──────────────────────────────────────────────
         $col === 'role' && UserRole::tryFrom($str) !== null => (function () use ($str): string {
             $e = UserRole::from($str);

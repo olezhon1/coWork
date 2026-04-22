@@ -11,7 +11,6 @@
             <h4>Навігація</h4>
             <a href="<?= siteUrl('home') ?>">Головна</a>
             <a href="<?= siteUrl('coworkings') ?>">Каталог</a>
-            <a href="<?= siteUrl('subscriptions') ?>">Абонементи</a>
             <a href="<?= siteUrl('profile') ?>">Профіль</a>
         </div>
         <div class="site-footer__col">

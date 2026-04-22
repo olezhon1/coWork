@@ -4,7 +4,7 @@
 $groups = [
     'Користувачі' => [AdminTable::Users],
     'Каталог'     => [AdminTable::Coworkings, AdminTable::Workspaces, AdminTable::OperatingHours, AdminTable::Features, AdminTable::CoworkingFeatures, AdminTable::Gallery],
-    'Сервіс'      => [AdminTable::Bookings, AdminTable::BookingSlots, AdminTable::Subscriptions, AdminTable::Reviews],
+    'Сервіс'      => [AdminTable::Bookings, AdminTable::BookingSlots, AdminTable::Reviews],
 ];
 ?>
 <div class="page-header">

@@ -36,7 +36,6 @@ function getRepo(AdminTable $t): BaseRepository
         AdminTable::Gallery->value           => ['GalleryRepository',          fn() => new GalleryRepository()],
         AdminTable::Bookings->value          => ['BookingRepository',          fn() => new BookingRepository()],
         AdminTable::BookingSlots->value      => ['BookingSlotRepository',      fn() => new BookingSlotRepository()],
-        AdminTable::Subscriptions->value     => ['SubscriptionRepository',     fn() => new SubscriptionRepository()],
         AdminTable::Reviews->value           => ['ReviewRepository',           fn() => new ReviewRepository()],
     ];
 
@@ -348,31 +347,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
                         $bRepo->recalcTotalPrice($oldBookingId);
                     }
                     flashSet(FlashType::Ok, 'Слот оновлено.');
-                }
-            }
-        }
-
-        // ── Subscriptions ─────────────────────────────────────────────────────
-        elseif ($table === AdminTable::Subscriptions) {
-            require_once __DIR__ . '/db/SubscriptionRepository.php';
-            $repo       = new SubscriptionRepository();
-            $userId     = (int) ($_POST['user_id']      ?? 0);
-            $cwId       = (int) ($_POST['coworking_id'] ?? 0);
-            $hoursLeft  = (int) ($_POST['hours_left']   ?? 0);
-            $endDate    = trim($_POST['end_date']        ?? '');
-            $statusRaw  = trim($_POST['status']          ?? 'active');
-            $status     = SubscriptionStatus::tryFrom($statusRaw) ?? SubscriptionStatus::Active;
-
-            if (!$repo->coworkingExists($cwId)) {
-                $warnReason  = WarnReason::CoworkingNotFound;
-                $warnDetails = ["coworking_id: {$cwId}"];
-            } else {
-                if ($action === 'add') {
-                    $repo->create($userId, $cwId, $hoursLeft, $endDate, $status->value);
-                    flashSet(FlashType::Ok, 'Абонемент створено.');
-                } else {
-                    $repo->update($id, $userId, $cwId, $hoursLeft, $endDate, $status->value);
-                    flashSet(FlashType::Ok, 'Абонемент оновлено.');
                 }
             }
         }

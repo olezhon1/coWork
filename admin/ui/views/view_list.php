@@ -15,7 +15,6 @@ $columns = match ($table) {
     AdminTable::Gallery           => ['id', 'entity_type', 'entity_id', 'is_main', 'image_url'],
     AdminTable::Bookings          => ['id', 'user_name', 'workspace_name', 'coworking_name', 'status', 'total_price', 'created_at'],
     AdminTable::BookingSlots      => ['id', 'booking_id', 'user_name', 'workspace_name', 'start_time', 'end_time', 'booking_status'],
-    AdminTable::Subscriptions     => ['id', 'user_name', 'coworking_name', 'hours_left', 'end_date', 'status'],
     AdminTable::Reviews           => ['id', 'user_name', 'coworking_name', 'rating', 'comment', 'created_at'],
 };
 
@@ -56,9 +55,6 @@ $colLabels = [
     'created_at'       => 'Дата',
     'start_time'       => 'Початок',
     'end_time'         => 'Кінець',
-    'hours_left'       => 'Годин',
-    'end_date'         => 'До',
-    'expire_date'      => 'До',
     'rating'           => 'Рейтинг',
     'comment'          => 'Коментар',
     'description'      => 'Опис',
@@ -123,11 +119,6 @@ $filterConfig = match ($table) {
     AdminTable::BookingSlots => [
         'booking_id' => ['type' => 'text', 'placeholder' => 'ID бронювання'],
         'status'     => ['type' => 'select','placeholder' => 'Всі статуси', 'options' => BookingStatus::options()],
-    ],
-    AdminTable::Subscriptions => [
-        'search'       => ['type' => 'text',   'placeholder' => 'Пошук по користувачу'],
-        'coworking_id' => ['type' => 'rel',    'placeholder' => 'Всі коворкінги', 'rel' => 'coworkings'],
-        'status'       => ['type' => 'select', 'placeholder' => 'Всі статуси', 'options' => SubscriptionStatus::options()],
     ],
     AdminTable::Reviews => [
         'search'       => ['type' => 'text',   'placeholder' => 'Пошук по коментарю / користувачу'],
@@ -243,7 +234,6 @@ function loadFilterOptions(string $source): array {
                 AdminTable::Workspaces    => ['id'=>'w.id','name'=>'w.name','price_per_hour'=>'w.price_per_hour','capacity'=>'w.capacity'],
                 AdminTable::Bookings      => ['id'=>'b.id','total_price'=>'b.total_price','created_at'=>'b.created_at'],
                 AdminTable::BookingSlots  => ['id'=>'bs.id','start_time'=>'bs.start_time'],
-                AdminTable::Subscriptions => ['id'=>'s.id','hours_left'=>'s.hours_left','end_date'=>'s.end_date'],
                 AdminTable::Reviews       => ['id'=>'r.id','rating'=>'r.rating','created_at'=>'r.created_at'],
                 default                   => [],
             };

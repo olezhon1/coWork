@@ -2,7 +2,6 @@
 /**
  * @var array $coworkings
  * @var array $workspaceTypes
- * @var array $plans
  * @var array $mapPoints
  * @var array $topFeatures
  * @var ?string $city
@@ -93,41 +92,6 @@
     </div>
 </section>
 
-<section class="section section--plans">
-    <div class="container">
-        <div class="section__head section__head--light">
-            <h2>Абонементи — економ до 30%</h2>
-            <span>Купуй пакет годин і використовуй у будь-який зручний час</span>
-        </div>
-        <?php if (empty($plans)): ?>
-            <p class="muted">Планів поки немає.</p>
-        <?php else: ?>
-            <div class="grid grid--plans">
-                <?php foreach ($plans as $p):
-                    $perHour = $p['hours_included'] > 0 ? (float) $p['price'] / (int) $p['hours_included'] : 0;
-                ?>
-                    <div class="plan-card">
-                        <div class="plan-card__name"><?= e($p['name']) ?></div>
-                        <div class="plan-card__price"><?= formatPrice((float) $p['price']) ?></div>
-                        <div class="plan-card__hours"><?= (int) $p['hours_included'] ?> год • <?= (int) $p['duration_days'] ?> днів</div>
-                        <?php if ($p['description']): ?>
-                            <p class="plan-card__desc"><?= e($p['description']) ?></p>
-                        <?php endif; ?>
-                        <div class="plan-card__per-hour muted small">
-                            <?php if ($perHour > 0): ?>~ <?= formatPrice($perHour) ?>/год<?php endif; ?>
-                        </div>
-                        <form method="post" action="<?= siteUrl('subscriptions') ?>">
-                            <?= csrfField() ?>
-                            <input type="hidden" name="plan_id" value="<?= (int) $p['id'] ?>">
-                            <button type="submit" class="btn btn--primary btn--block">Придбати</button>
-                        </form>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-    </div>
-</section>
-
 <section class="container section">
     <div class="section__head">
         <h2>Мапа коворкінгів<?= $city ? ' у ' . e($city) : '' ?></h2>
@@ -148,7 +112,7 @@
     </div>
     <div class="grid grid--features">
         <div class="feat-box"><div class="feat-box__ico">⚡</div><div class="feat-box__title">Швидке бронювання</div><p>Декілька кліків — і місце за тобою.</p></div>
-        <div class="feat-box"><div class="feat-box__ico">💳</div><div class="feat-box__title">Гнучкі тарифи</div><p>Оплата по годинах або абонемент на місяць.</p></div>
+        <div class="feat-box"><div class="feat-box__ico">💳</div><div class="feat-box__title">Прозорі тарифи</div><p>Оплата по годинах без прихованих комісій.</p></div>
         <div class="feat-box"><div class="feat-box__ico">📍</div><div class="feat-box__title">По всій Україні</div><p>Локації в різних містах і районах.</p></div>
         <div class="feat-box"><div class="feat-box__ico">🔒</div><div class="feat-box__title">Безпека та довіра</div><p>Реальні відгуки від відвідувачів.</p></div>
     </div>

@@ -21,7 +21,6 @@ function icon(string $name, string $extraStyle = ''): string
         'reviews'       => '<path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3 1.5.5-3.5L3 5.5l3.5-.5z"/>',
         'features'      => '<path d="M8 2a6 6 0 100 12A6 6 0 008 2z"/><path d="M8 6v4M6 8h4"/>',
         'gallery'       => '<rect x="2" y="3" width="12" height="10" rx="1.5"/><circle cx="6" cy="7" r="1.5"/><path d="M2 12l4-3 3 2.5 2-2 3 3"/>',
-        'subscriptions' => '<rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/><path d="M2 8h12"/>',
         'dashboard'     => '<rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/>',
 
         // ── Дії ───────────────────────────────────────────────────────────

@@ -27,9 +27,7 @@ site/
 │   ├── ReviewModel.php
 │   ├── FeatureModel.php
 │   ├── GalleryModel.php
-│   ├── OperatingHoursModel.php
-│   ├── SubscriptionPlanModel.php
-│   └── SubscriptionModel.php
+│   └── OperatingHoursModel.php
 ├── controllers/
 │   ├── HomeController.php
 │   ├── CoworkingsController.php
@@ -37,7 +35,6 @@ site/
 │   ├── BookingController.php
 │   ├── AuthController.php
 │   ├── ProfileController.php
-│   ├── SubscriptionsController.php
 │   ├── ReviewController.php
 │   └── CityController.php
 ├── views/
@@ -49,8 +46,7 @@ site/
 │   ├── coworking/show.php           # деталі коворкінгу
 │   ├── booking/form.php
 │   ├── auth/{login.php, register.php}
-│   ├── profile/index.php
-│   └── subscriptions/index.php
+│   └── profile/index.php
 └── assets/
     ├── css/site.css
     └── js/site.js                    # бронювання, галерея, мапа (Leaflet)
@@ -67,9 +63,8 @@ site/
 | `login`        | GET/POST | Вхід                              |
 | `register`     | GET/POST | Реєстрація                        |
 | `logout`       | GET   | Вихід                              |
-| `profile`      | GET   | Мої бронювання й абонементи        |
+| `profile`      | GET   | Мої бронювання                     |
 | `cancel_booking` | POST | Скасувати бронювання               |
-| `subscriptions`| GET/POST | Каталог планів / купівля          |
 | `review`       | POST  | Створення відгуку                  |
 | `set_city`     | GET/POST | Зберегти місто в сесії/cookie     |
 
@@ -86,14 +81,6 @@ site/
      (`BookingSlotModel::hasConflict()`).
 4. У транзакції створюється `bookings` (status=`pending`) + `booking_slots`.
 5. Користувач бачить нове бронювання в профілі з можливістю скасувати.
-
-### Купівля абонементу
-1. `subscription_plans` → вибирається план.
-2. При покупці створюється запис у `subscriptions` з:
-   `hours_left = plan.hours_included`,
-   `end_date = NOW() + plan.duration_days`,
-   `status = 'active'`,
-   `plan_id`.
 
 ### Відгуки
 - Створити відгук можна лише при наявності хоча б одного бронювання у цьому коворкінгу й не більше ніж одного відгуку на коворкінг.
@@ -120,8 +107,7 @@ site/
 - Нові поля з `migration_2_site.sql`:
   - `coworkings.latitude`, `coworkings.longitude`
   - `bookings.created_at`, `reviews.created_at` (default `GETDATE()`)
-  - нова таблиця `subscription_plans`
-  - `subscriptions.plan_id`
+- `migration_4_drop_subscriptions.sql` — повне видалення таблиць `subscriptions` та `subscription_plans` (фіча абонементів вимкнена).
 
 ## Як запустити локально
 

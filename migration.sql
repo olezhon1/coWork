@@ -56,31 +56,7 @@ BEGIN
 END
 GO
 
--- 5. Виправляємо subscriptions: expire_date -> end_date (якщо потрібно)
-IF EXISTS (
-    SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE TABLE_NAME='subscriptions' AND COLUMN_NAME='expire_date'
-)
-AND NOT EXISTS (
-    SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE TABLE_NAME='subscriptions' AND COLUMN_NAME='end_date'
-)
-BEGIN
-    EXEC sp_rename 'subscriptions.expire_date', 'end_date', 'COLUMN';
-END
-GO
-
--- Додаємо status до subscriptions якщо немає
-IF NOT EXISTS (
-    SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE TABLE_NAME='subscriptions' AND COLUMN_NAME='status'
-)
-BEGIN
-    ALTER TABLE [dbo].[subscriptions] ADD [status] NVARCHAR(50) DEFAULT 'active';
-END
-GO
-
--- 6. Видаляємо date з booking_slots (зберігаємо start_time/end_time як DATETIME)
+-- 5. Видаляємо date з booking_slots (зберігаємо start_time/end_time як DATETIME)
 IF EXISTS (
     SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
     WHERE TABLE_NAME='booking_slots' AND COLUMN_NAME='date'

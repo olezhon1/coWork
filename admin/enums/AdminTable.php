@@ -12,7 +12,6 @@ enum AdminTable: string
     case Gallery            = 'gallery';
     case Bookings           = 'bookings';
     case BookingSlots       = 'booking_slots';
-    case Subscriptions      = 'subscriptions';
     case Reviews            = 'reviews';
 
     public function label(): string
@@ -27,7 +26,6 @@ enum AdminTable: string
             self::Gallery           => 'Галерея',
             self::Bookings          => 'Бронювання',
             self::BookingSlots      => 'Слоти',
-            self::Subscriptions     => 'Абонементи',
             self::Reviews           => 'Відгуки',
         };
     }
@@ -44,7 +42,6 @@ enum AdminTable: string
             self::Gallery           => 'gallery',
             self::Bookings          => 'bookings',
             self::BookingSlots      => 'booking_slots',
-            self::Subscriptions     => 'subscriptions',
             self::Reviews           => 'reviews',
         };
     }

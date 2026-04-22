@@ -191,31 +191,12 @@ h4 { font-size: var(--fs-md); }
     gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
 }
 .section__head h2, .section__head h1 { margin: 0; }
-.section--plans {
-    background: var(--ink);
-    color: #F2EEE6;
-}
-.section--plans h2, .section--plans h3 { color: #F7F4EF; }
-.section--plans .muted { color: #A7A099; }
-.section--plans .plan-card {
-    background: #2A2620;
-    color: #F2EEE6;
-    border-color: #3A3630;
-}
-.section--plans .plan-card__price { color: #E9B37C; }
-.section--plans .plan-card__name { color: #F7F4EF; }
-.section--plans .plan-card__desc { color: #B6ADA0; }
-.section--plans .plan-card__hours { color: #F7F4EF; }
-.section__head--light { color: #F7F4EF; }
-.section__head--light span { color: rgba(247,244,239,0.7); }
 
 /* ============ GRIDS ============ */
 .grid { display: grid; gap: 20px; }
 .grid--cards { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
 .grid--ws-types { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-.grid--plans { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 .grid--ws { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-.grid--subs { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 .grid--features { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 
 /* ============ COWORKING CARD ============ */
@@ -300,29 +281,6 @@ h4 { font-size: var(--fs-md); }
     font-weight: 600; color: var(--accent);
     border-top: 1px solid var(--border); padding-top: 10px;
 }
-
-/* ============ PLAN CARD ============ */
-.plan-card {
-    background: var(--surface); border-radius: var(--radius-lg); padding: 24px;
-    color: var(--ink);
-    border: 1px solid var(--border);
-    display: flex; flex-direction: column; gap: 10px;
-    transition: box-shadow var(--t-med), transform var(--t-med);
-}
-.plan-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.plan-card__name {
-    font-family: var(--font-serif);
-    font-weight: 600; font-size: var(--fs-lg);
-}
-.plan-card__price {
-    font-family: var(--font-serif);
-    font-size: 30px; font-weight: 600; color: var(--warm);
-    letter-spacing: -0.02em;
-}
-.plan-card__hours { font-weight: 600; color: var(--accent); }
-.plan-card__desc { margin: 0; color: var(--muted); font-size: var(--fs-sm); }
-.plan-card__per-hour { margin-bottom: 6px; color: var(--muted); font-size: var(--fs-sm); }
-.plan-card--lg { padding: 28px; }
 
 /* ============ FEATURES ============ */
 .feat-box {
@@ -679,21 +637,6 @@ body.modal-open { overflow: hidden; }
     font-weight: 600; font-size: var(--fs-2xl);
     letter-spacing: -0.01em;
 }
-.sub-card {
-    background: var(--surface); padding: 20px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    display: flex; flex-direction: column; gap: 8px;
-}
-.sub-card__name {
-    font-family: var(--font-serif);
-    font-weight: 600; font-size: var(--fs-md);
-}
-.sub-card__hours {
-    font-family: var(--font-serif);
-    font-size: 22px; font-weight: 600; color: var(--accent);
-}
-
 /* ============ FOOTER ============ */
 .site-footer {
     background: var(--ink); color: #C4BDB1;

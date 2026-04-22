@@ -2,7 +2,6 @@
 /**
  * @var array $user
  * @var array $bookings
- * @var array $subscriptions
  */
 ?>
 <section class="container section">
@@ -58,28 +57,6 @@
                 <?php endforeach; ?>
                 </tbody>
             </table>
-        </div>
-    <?php endif; ?>
-
-    <h2>Мої абонементи</h2>
-    <?php if (empty($subscriptions)): ?>
-        <p class="muted">У вас немає активних абонементів.
-            <a href="<?= siteUrl('subscriptions') ?>">Подивитись доступні плани →</a></p>
-    <?php else: ?>
-        <div class="grid grid--subs">
-            <?php foreach ($subscriptions as $s): ?>
-                <div class="sub-card">
-                    <div class="sub-card__name"><?= e($s['plan_name'] ?? 'Абонемент') ?></div>
-                    <?php if (!empty($s['coworking_name'])): ?>
-                        <div class="muted small">Коворкінг: <?= e($s['coworking_name']) ?></div>
-                    <?php else: ?>
-                        <div class="muted small">Діє у всіх локаціях</div>
-                    <?php endif; ?>
-                    <div class="sub-card__hours"><?= (int) $s['hours_left'] ?> год залишилось</div>
-                    <div class="muted small">До <?= formatDate($s['end_date'] ?? null) ?></div>
-                    <span class="badge <?= $s['status'] === 'active' ? 'b-green' : 'b-gray' ?>"><?= e($s['status']) ?></span>
-                </div>
-            <?php endforeach; ?>
         </div>
     <?php endif; ?>
 </section>

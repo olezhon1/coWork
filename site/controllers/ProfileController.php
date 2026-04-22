@@ -8,13 +8,11 @@ class ProfileController extends Controller
         $this->requireLogin();
 
         $bookings = (new BookingModel())->findByUser(Auth::id());
-        $subscriptions = (new SubscriptionModel())->findByUser(Auth::id());
 
         $this->render('profile/index', [
-            'title'         => 'Мій профіль',
-            'user'          => Auth::user(),
-            'bookings'      => $bookings,
-            'subscriptions' => $subscriptions,
+            'title'    => 'Мій профіль',
+            'user'     => Auth::user(),
+            'bookings' => $bookings,
         ]);
     }
 
