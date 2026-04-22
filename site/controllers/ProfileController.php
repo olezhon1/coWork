@@ -24,9 +24,14 @@ class ProfileController extends Controller
         $this->requireLogin();
         csrfCheck();
 
-        $um = new UserModel();
-        $me = Auth::user();
+        $um  = new UserModel();
         $uid = Auth::id();
+        $me  = $um->findById($uid);
+        if (!$me) {
+            flash('err', 'Сесія застаріла, увійдіть ще раз');
+            Response::redirect(siteUrl('login'));
+            return;
+        }
 
         $fullName = trim((string) Request::post('full_name', ''));
         $email    = mb_strtolower(trim((string) Request::post('email', '')));
