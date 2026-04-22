@@ -2,7 +2,7 @@
 // admin/settings.php — налаштування системи (обліковий період, шляхи, тощо)
 
 require_once __DIR__ . '/config/bootstrap.php';
-requireAdmin();
+requireSuperAdmin();
 
 require_once __DIR__ . '/db/SettingsRepository.php';
 require_once __DIR__ . '/db/AuditLogRepository.php';

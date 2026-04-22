@@ -15,15 +15,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $repo->findAdminByEmail($email);
 
         if ($user && password_verify($pass, $user['password_hash'])) {
-            $_SESSION['admin']      = true;
-            $_SESSION['admin_id']   = $user['id'];
-            $_SESSION['admin_name'] = $user['full_name'];
-            require_once __DIR__ . '/db/AuditLogRepository.php';
-            (new AuditLogRepository())->log(
-                (int) $user['id'], (string) $user['full_name'],
-                'LOGIN', null, null, 'Адмін-вхід',
-            );
-            redirect('/admin/');
+            $role = UserRole::tryFrom((string) $user['role']) ?? UserRole::User;
+            if ($role->canAccessAdmin()) {
+                $_SESSION['admin']      = true;
+                $_SESSION['admin_id']   = $user['id'];
+                $_SESSION['admin_name'] = $user['full_name'];
+                $_SESSION['admin_role'] = $role->value;
+                require_once __DIR__ . '/db/AuditLogRepository.php';
+                (new AuditLogRepository())->log(
+                    (int) $user['id'], (string) $user['full_name'],
+                    'LOGIN', null, null, 'Вхід у адмінку (' . $role->label() . ')',
+                );
+                redirect('/admin/');
+            }
         }
         require_once __DIR__ . '/db/AuditLogRepository.php';
         (new AuditLogRepository())->log(
