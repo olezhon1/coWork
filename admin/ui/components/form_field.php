@@ -13,6 +13,15 @@ function renderFormField(string $fieldName, array $meta, mixed $currentValue): v
     $val       = h((string) $currentValue);
     $reqAttr   = $req ? ' required' : '';
     $reqMark   = $req ? '<span class="req">*</span>' : '';
+    $readonly  = !empty($meta['readonly']);
+    $roAttr    = $readonly ? ' readonly' : '';
+    // Для number-полів за замовчуванням дозволяємо десяткові значення (step="any"),
+    // інакше HTML5 блокує float (наприклад, 48.46132 у широті).
+    $stepAttr  = '';
+    if ($type === FormFieldType::Number) {
+        $step = $meta['step'] ?? 'any';
+        $stepAttr = ' step="' . h((string) $step) . '"';
+    }
 
     // Каскадний селект коворкінг → робоче місце має власну розмітку (два form-group)
     if ($type === FormFieldType::SelectWorkspaceCascade) {
@@ -63,7 +72,7 @@ function renderFormField(string $fieldName, array $meta, mixed $currentValue): v
                id="field-<?= h($fieldName) ?>"
                name="<?= h($fieldName) ?>"
                value="<?= $val ?>"
-               <?= $reqAttr ?>>
+               <?= $stepAttr ?><?= $roAttr ?><?= $reqAttr ?>>
       <?php endif ?>
 
       <?php if ($hint): ?>

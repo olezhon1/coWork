@@ -79,7 +79,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
 
         if ($id > 0) {
             try {
+                // При видаленні слота — запамʼятати booking_id, щоб перерахувати total_price після
+                $slotBookingId = null;
+                if ($table === AdminTable::BookingSlots) {
+                    require_once __DIR__ . '/db/BookingSlotRepository.php';
+                    $existingSlot = (new BookingSlotRepository())->findById($id);
+                    $slotBookingId = $existingSlot ? (int) $existingSlot['booking_id'] : null;
+                }
+
                 getRepo($table)->delete($id);
+
+                if ($slotBookingId !== null) {
+                    require_once __DIR__ . '/db/BookingRepository.php';
+                    (new BookingRepository())->recalcTotalPrice($slotBookingId);
+                }
+
                 $audit->log($aUid, $aUnm, 'DELETE', $table->value, $id,
                     "Видалено запис #{$id}");
                 flashSet(FlashType::Ok, 'Запис #' . $id . ' видалено.');
@@ -141,12 +155,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
             $city   = trim($_POST['city'] ?? '');
             $desc   = trim($_POST['description'] ?? '');
             $is247  = (int) ($_POST['is_24_7'] ?? 0);
+            $latRaw = trim((string) ($_POST['latitude']  ?? ''));
+            $lngRaw = trim((string) ($_POST['longitude'] ?? ''));
+            $lat    = $latRaw === '' ? null : (float) str_replace(',', '.', $latRaw);
+            $lng    = $lngRaw === '' ? null : (float) str_replace(',', '.', $lngRaw);
 
             if ($action === 'add') {
-                $repo->create($name, $addr, $city, $desc, $is247);
+                $repo->create($name, $addr, $city, $desc, $is247, $lat, $lng);
                 flashSet(FlashType::Ok, "Коворкінг «{$name}» створено.");
             } else {
-                $repo->update($id, $name, $addr, $city, $desc, $is247);
+                $repo->update($id, $name, $addr, $city, $desc, $is247, $lat, $lng);
                 flashSet(FlashType::Ok, "Коворкінг «{$name}» оновлено.");
             }
         }
@@ -273,18 +291,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
             $userId    = (int) ($_POST['user_id']      ?? 0);
             $wsId      = (int) ($_POST['workspace_id'] ?? 0);
             $statusRaw = trim($_POST['status'] ?? '');
-            $price     = (float) ($_POST['total_price'] ?? 0);
             $status    = BookingStatus::tryFrom($statusRaw) ?? BookingStatus::Pending;
 
             if (!$wsRepo->existsById('workspaces', $wsId)) {
                 $warnReason  = WarnReason::WorkspaceNotFound;
                 $warnDetails = ["workspace_id: {$wsId}"];
             } else {
+                // total_price — derived з booking_slots: новий booking починається з 0,
+                // далі перераховується на кожну зміну слотів.
                 if ($action === 'add') {
-                    $bRepo->create($userId, $wsId, $status, $price);
+                    $newId = $bRepo->create($userId, $wsId, $status, 0.0);
+                    $bRepo->recalcTotalPrice($newId);
                     flashSet(FlashType::Ok, 'Бронювання створено.');
                 } else {
-                    $bRepo->update($id, $userId, $wsId, $status, $price);
+                    $existingPrice = $bRepo->getTotalPrice($id);
+                    $bRepo->update($id, $userId, $wsId, $status, $existingPrice);
+                    // Воркспейс могли змінити → перерахувати під нову ціну
+                    $bRepo->recalcTotalPrice($id);
                     flashSet(FlashType::Ok, 'Бронювання оновлено.');
                 }
             }
@@ -293,7 +316,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
         // ── BookingSlots ──────────────────────────────────────────────────────
         elseif ($table === AdminTable::BookingSlots) {
             require_once __DIR__ . '/db/BookingSlotRepository.php';
+            require_once __DIR__ . '/db/BookingRepository.php';
             $slotRepo  = new BookingSlotRepository();
+            $bRepo     = new BookingRepository();
             $bookingId = (int) ($_POST['booking_id'] ?? 0);
             $startTime = trim($_POST['start_time'] ?? '');
             $endTime   = trim($_POST['end_time']   ?? '');
@@ -305,11 +330,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
                 $warnReason  = WarnReason::InvalidTimeRange;
                 $warnDetails = ["Початок: {$startTime}", "Кінець: {$endTime}"];
             } else {
+                // Може змінитись booking_id при редагуванні — треба знати старий, щоб перерахувати обидва
+                $oldBookingId = null;
+                if ($action === 'edit') {
+                    $existing = $slotRepo->findById($id);
+                    $oldBookingId = $existing ? (int) $existing['booking_id'] : null;
+                }
+
                 if ($action === 'add') {
                     $slotRepo->create($bookingId, $startTime, $endTime);
+                    $bRepo->recalcTotalPrice($bookingId);
                     flashSet(FlashType::Ok, "Слот {$startTime} – {$endTime} додано.");
                 } else {
                     $slotRepo->update($id, $bookingId, $startTime, $endTime);
+                    $bRepo->recalcTotalPrice($bookingId);
+                    if ($oldBookingId !== null && $oldBookingId !== $bookingId) {
+                        $bRepo->recalcTotalPrice($oldBookingId);
+                    }
                     flashSet(FlashType::Ok, 'Слот оновлено.');
                 }
             }

@@ -80,7 +80,9 @@ function tableFormConfig(AdminTable $table): array
             'workspace_id' => ['type' => FormFieldType::SelectWorkspaceCascade, 'label' => 'Робоче місце',  'req' => true, 'span' => 'full'],
             'status'       => ['type' => FormFieldType::Select,                 'label' => 'Статус',        'req' => false,
                                'options' => BookingStatus::options()],
-            'total_price'  => ['type' => FormFieldType::Number,                 'label' => 'Загальна сума, грн','req' => false],
+            'total_price'  => ['type' => FormFieldType::Number,                 'label' => 'Загальна сума, грн','req' => false,
+                               'readonly' => true,
+                               'hint' => 'Розраховується автоматично: сумарні години слотів × ціна за годину воркспейсу. Щоб змінити суму — додайте/відредагуйте слоти.'],
         ],
 
         AdminTable::BookingSlots => [
