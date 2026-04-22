@@ -36,6 +36,36 @@ function isLoggedIn(): bool
     return !empty($_SESSION['admin']);
 }
 
+function currentAdminRole(): ?UserRole
+{
+    $raw = $_SESSION['admin_role'] ?? null;
+    return $raw ? UserRole::tryFrom((string)$raw) : null;
+}
+
+/** Гейт для системних розділів (Сервіс, Налаштування, Журнал дій). */
+function requireSuperAdmin(): void
+{
+    requireAdmin();
+    $role = currentAdminRole();
+    if (!$role || !$role->isSuperAdmin()) {
+        flashSet(FlashType::Error, 'Доступ лише для адміністратора.');
+        header('Location: /admin/');
+        exit;
+    }
+}
+
+/** Гейт для таблиці в адмінці — відповідно до ролі. */
+function requireTableAccess(AdminTable $t): void
+{
+    requireAdmin();
+    $role = currentAdminRole();
+    if (!$role || !$role->canAccessTable($t)) {
+        flashSet(FlashType::Error, 'Немає прав для роботи з цією таблицею.');
+        header('Location: /admin/');
+        exit;
+    }
+}
+
 function flashSet(FlashType $type, string $msg): void
 {
     $_SESSION['flash'] = ['type' => $type->value, 'msg' => $msg];

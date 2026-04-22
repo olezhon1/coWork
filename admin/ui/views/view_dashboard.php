@@ -1,11 +1,19 @@
 <?php
 // ui/views/view_dashboard.php
 
-$groups = [
+$dashRole = currentAdminRole() ?? UserRole::User;
+
+$groupsAll = [
     'Користувачі' => [AdminTable::Users],
     'Каталог'     => [AdminTable::Coworkings, AdminTable::Workspaces, AdminTable::OperatingHours, AdminTable::Features, AdminTable::CoworkingFeatures, AdminTable::Gallery],
     'Сервіс'      => [AdminTable::Bookings, AdminTable::BookingSlots, AdminTable::Reviews],
 ];
+
+$groups = [];
+foreach ($groupsAll as $name => $tables) {
+    $allowed = array_values(array_filter($tables, fn($t) => $dashRole->canAccessTable($t)));
+    if ($allowed) $groups[$name] = $allowed;
+}
 ?>
 <div class="page-header">
   <div>

@@ -4,6 +4,8 @@
 require_once __DIR__ . '/config/bootstrap.php';
 requireAdmin();
 
+$currentRole = currentAdminRole() ?? UserRole::User;
+
 // ── Параметри ─────────────────────────────────────────────────────────────────
 $tableRaw = $_GET['t'] ?? '';
 $action   = $_GET['a'] ?? 'list';
@@ -22,6 +24,11 @@ foreach (['search','city','status','role','type_key','coworking_id','workspace_i
 }
 
 $table = AdminTable::tryFromValue($tableRaw);
+
+// Гейт доступу за роллю (content_manager бачить лише контент-таблиці)
+if ($table !== null) {
+    requireTableAccess($table);
+}
 
 // ── Репозиторій ───────────────────────────────────────────────────────────────
 function getRepo(AdminTable $t): BaseRepository
@@ -386,7 +393,7 @@ if ($table === null) {
     $pageTitle   = 'Дашборд';
     $activeTable = null;
     $stats = [];
-    foreach (AdminTable::cases() as $t) {
+    foreach ($currentRole->allowedTables() as $t) {
         require_once __DIR__ . '/db/BaseRepository.php';
         try {
             $stats[$t->value] = getRepo($t)->total();

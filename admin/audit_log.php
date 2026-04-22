@@ -2,7 +2,7 @@
 // admin/audit_log.php — перегляд журналу дій адміністратором
 
 require_once __DIR__ . '/config/bootstrap.php';
-requireAdmin();
+requireSuperAdmin();
 
 require_once __DIR__ . '/db/AuditLogRepository.php';
 require_once __DIR__ . '/db/UserRepository.php';

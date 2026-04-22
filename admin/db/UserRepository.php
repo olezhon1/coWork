@@ -5,13 +5,18 @@ require_once __DIR__ . '/BaseRepository.php';
 
 class UserRepository extends BaseRepository
 {
-    /** Пошук адміна за email (тільки role = 'admin') */
+    /** Пошук користувача з правами на адмінку (admin | content_manager). */
     public function findAdminByEmail(string $email): ?array
     {
         return $this->fetchOne(
-            "SELECT * FROM users WHERE email = ? AND role = 'admin'",
+            "SELECT * FROM users WHERE email = ? AND role IN ('admin','content_manager')",
             [$email]
         );
+    }
+
+    public function findByEmail(string $email): ?array
+    {
+        return $this->fetchOne('SELECT * FROM users WHERE email = ?', [$email]);
     }
 
     public function findAll(int $offset = 0, int $limit = 20, array $filters = []): array
