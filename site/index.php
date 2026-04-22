@@ -45,10 +45,6 @@ $routes = [
     'cancel_booking' => [
         'POST' => [ProfileController::class, 'cancelBooking'],
     ],
-    'subscriptions' => [
-        'GET'  => [SubscriptionsController::class, 'index'],
-        'POST' => [SubscriptionsController::class, 'buy'],
-    ],
     'review' => [
         'POST' => [ReviewController::class, 'create'],
     ],

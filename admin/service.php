@@ -70,9 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'archive_table': {
                 $table = (string) ($_POST['archive_table'] ?? '');
                 $allowed = ['users','coworkings','workspaces','bookings','booking_slots',
-                            'reviews','subscriptions','audit_log','settings',
-                            'features','coworking_features','gallery','operating_hours',
-                            'subscription_plans'];
+                            'reviews','audit_log','settings',
+                            'features','coworking_features','gallery','operating_hours'];
                 if (!in_array($table, $allowed, true)) {
                     throw new \InvalidArgumentException('Неприпустима таблиця.');
                 }
@@ -211,7 +210,7 @@ include __DIR__ . '/ui/partials/layout_head.php';
     <label class="form-label" for="at">Таблиця</label>
     <select name="archive_table" id="at" class="input" required>
       <?php foreach (['users','coworkings','workspaces','bookings','booking_slots',
-                      'reviews','subscriptions','audit_log','settings'] as $t): ?>
+                      'reviews','audit_log','settings'] as $t): ?>
         <option value="<?= h($t) ?>"><?= h($t) ?></option>
       <?php endforeach ?>
     </select>

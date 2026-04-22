@@ -30,8 +30,6 @@ class HomeController extends Controller
         }
         unset($wt);
 
-        $plans = (new SubscriptionPlanModel())->allActive();
-
         $mapPoints = (new CoworkingModel())->withCoordinates($city);
 
         $topFeatures = (new FeatureModel())->top(8);
@@ -40,7 +38,6 @@ class HomeController extends Controller
             'title'          => 'coWork — твій ідеальний офіс на годину чи день',
             'coworkings'     => $coworkings,
             'workspaceTypes' => $workspaceTypes,
-            'plans'          => $plans,
             'mapPoints'      => $mapPoints,
             'topFeatures'    => $topFeatures,
             'city'           => $city,

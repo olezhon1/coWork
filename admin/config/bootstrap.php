@@ -14,7 +14,6 @@ $enumFiles = [
     'FlashType',
     'WarnReason',
     'UserRole',
-    'SubscriptionStatus',
 ];
 foreach ($enumFiles as $enum) {
     require_once __DIR__ . "/../enums/{$enum}.php";

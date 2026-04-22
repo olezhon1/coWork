@@ -13,7 +13,7 @@ $navGroups = [
     ]],
     'service' => ['label' => 'Операції',     'tables' => [
         AdminTable::Bookings, AdminTable::BookingSlots,
-        AdminTable::Subscriptions, AdminTable::Reviews,
+        AdminTable::Reviews,
     ]],
 ];
 

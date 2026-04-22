@@ -49,8 +49,6 @@ $user = Auth::user();
             <a href="<?= siteUrl('coworkings', ['type' => 'photo']) ?>" class="nav-link">Фотостудії</a>
             <a href="<?= siteUrl('coworkings', ['type' => 'rec']) ?>" class="nav-link">Звукозапис</a>
             <a href="<?= siteUrl('coworkings', ['is_24_7' => '1']) ?>" class="nav-link nav-link--accent">24/7</a>
-            <span class="nav-spacer"></span>
-            <a href="<?= siteUrl('subscriptions') ?>" class="nav-link nav-link--pill">Абонементи</a>
         </div>
     </nav>
 </header>

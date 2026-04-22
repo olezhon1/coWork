@@ -27,8 +27,7 @@ coworking-admin/
 │   ├── BookingSlotRepository.php   ← bookingExists() перед create()
 │   ├── ReviewRepository.php        ← тільки findAll/findById/delete
 │   ├── FeatureRepository.php
-│   ├── GalleryRepository.php       ← entityExists(GalleryEntityType, id)
-│   └── SubscriptionRepository.php  ← coworkingExists() перед create()
+│   └── GalleryRepository.php       ← entityExists(GalleryEntityType, id)
 │
 ├── ui/
 │   ├── table_config.php            ← конфіг форм через enum::options()

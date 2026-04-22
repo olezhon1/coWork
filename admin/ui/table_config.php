@@ -6,7 +6,6 @@ require_once __DIR__ . '/../enums/BookingStatus.php';
 require_once __DIR__ . '/../enums/WorkspaceType.php';
 require_once __DIR__ . '/../enums/GalleryEntityType.php';
 require_once __DIR__ . '/../enums/UserRole.php';
-require_once __DIR__ . '/../enums/SubscriptionStatus.php';
 
 function tableFormConfig(AdminTable $table): array
 {
@@ -91,15 +90,6 @@ function tableFormConfig(AdminTable $table): array
                              'hint' => 'Формат: YYYY-MM-DD HH:MM'],
             'end_time'   => ['type' => FormFieldType::Text,           'label' => 'Кінець',      'req' => true,
                              'hint' => 'Формат: YYYY-MM-DD HH:MM'],
-        ],
-
-        AdminTable::Subscriptions => [
-            'user_id'      => ['type' => FormFieldType::SelectUsers,     'label' => 'Користувач',  'req' => true, 'span' => 'full'],
-            'coworking_id' => ['type' => FormFieldType::SelectCoworkings,'label' => 'Коворкінг',  'req' => true],
-            'hours_left'   => ['type' => FormFieldType::Number,          'label' => 'Годин залишилось','req' => false],
-            'end_date'     => ['type' => FormFieldType::Date,            'label' => 'Діє до',     'req' => false],
-            'status'       => ['type' => FormFieldType::Select,          'label' => 'Статус',     'req' => false,
-                               'options' => SubscriptionStatus::options()],
         ],
 
         AdminTable::Reviews => [],
