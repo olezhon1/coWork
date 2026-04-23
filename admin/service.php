@@ -110,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // ── GET ───────────────────────────────────────────────────────────────────────
 $backupFiles  = $svc->listBackupFiles($backupDir);
+$backupDirWarn = $svc->diagnoseBackupDir($backupDir);
 $periodStart  = $settings->get('accounting_period_start', '');
 $periodEnd    = $settings->get('accounting_period_end',   '');
 $periodName   = $settings->get('current_period_name',     '');
@@ -138,6 +139,18 @@ include __DIR__ . '/ui/partials/layout_head.php';
     Кожна дія вимагає явного підтвердження та фіксується в Журналі дій.
   </div>
 </div>
+
+<?php if ($backupDirWarn !== null): ?>
+  <div class="warn-banner">
+    <?= icon('warning') ?>
+    <div>
+      <strong>Список існуючих бекапів недоступний.</strong>
+      <?= h($backupDirWarn) ?>
+      Створення нових бекапів може працювати (бо пише SQL Server, а не PHP),
+      але dropdown «Відновлення БД» буде порожній.
+    </div>
+  </div>
+<?php endif; ?>
 
 <div class="svc-grid">
 
