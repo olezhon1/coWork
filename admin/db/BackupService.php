@@ -112,25 +112,55 @@ final class BackupService
         return $count;
     }
 
-    /** Перелік файлів у каталозі бекапу (ім'я + розмір + час) */
+    /**
+     * Перелік файлів у каталозі бекапу (ім'я + розмір + час).
+     * На Windows тека MSSQL Backup часто доступна тільки service-акаунту SQL Server,
+     * а PHP-процес (Apache/IIS/CLI) туди читати не може. У такому разі повертаємо
+     * порожній масив замість PHP-warning. Сторінка Сервісу окремо показує підказку
+     * адміну, що права треба налаштувати.
+     */
     public function listBackupFiles(string $dir): array
     {
-        if (!is_dir($dir)) return [];
+        if (!is_dir($dir) || !is_readable($dir)) return [];
+        $entries = @scandir($dir);
+        if ($entries === false) return [];
+
         $out = [];
-        foreach (scandir($dir) ?: [] as $f) {
+        foreach ($entries as $f) {
             if ($f === '.' || $f === '..') continue;
             $path = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR . $f;
-            if (is_file($path)) {
+            if (@is_file($path)) {
                 $out[] = [
                     'name'  => $f,
                     'path'  => $path,
-                    'size'  => filesize($path) ?: 0,
-                    'mtime' => filemtime($path) ?: 0,
+                    'size'  => @filesize($path) ?: 0,
+                    'mtime' => @filemtime($path) ?: 0,
                 ];
             }
         }
         usort($out, fn($a, $b) => $b['mtime'] <=> $a['mtime']);
         return $out;
+    }
+
+    /**
+     * Пояснює, чому каталог бекапів не вдалося прочитати з PHP.
+     * Повертає null, якщо все гаразд.
+     */
+    public function diagnoseBackupDir(string $dir): ?string
+    {
+        if ($dir === '') {
+            return 'Шлях до каталогу бекапів не задано у налаштуваннях (backup_path).';
+        }
+        if (!is_dir($dir)) {
+            return "Каталог {$dir} не існує або недоступний процесу PHP.";
+        }
+        if (!is_readable($dir)) {
+            return "Немає прав на читання каталогу {$dir}. На Windows це типово для "
+                 . "стандартної теки SQL Server — надайте read-доступ користувачу, "
+                 . "під яким крутиться веб-сервер, або оберіть окрему теку "
+                 . "(напр. C:\\coWork\\backups) і пропишіть її в налаштуваннях.";
+        }
+        return null;
     }
 
     private function sanitizeFilePath(string $path): string
