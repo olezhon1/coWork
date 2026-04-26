@@ -2,7 +2,7 @@
 // config/database.php
 
 define('DB_HOST',   'localhost');
-define('DB_NAME',   'СoworkingDB');
+define('DB_NAME',   'CoworkingDB');
 define('DB_USER',   'Oleh');
 define('DB_PASS',   'password');
 define('DB_PORT',   '1433');

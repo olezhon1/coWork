@@ -119,5 +119,3 @@ php -S localhost:8080
 # Або перейти за http://localhost:8080/ (автоматичне перенаправлення).
 # Адмінка: http://localhost:8080/admin/
 ```
-
-Переконайтесь, що виконано обидві міграції й у `admin/config/database.php` вказані коректні параметри MS SQL Server.

@@ -84,6 +84,5 @@ coworking-admin/
 Всі рядки з форм проходять через `SomeEnum::tryFrom()`:
 - Невідомий статус → `BookingStatus::Pending` (fallback)
 - Невідомий тип → `WorkspaceType::Open` (fallback)
-- Невідомий entity_type → WarnReason::GalleryEntityNotFound
 
 Жоден string не потрапляє напряму в SQL без проходження через enum.

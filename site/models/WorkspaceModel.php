@@ -16,13 +16,10 @@ class WorkspaceModel extends Db
     public function findByCoworking(int $coworkingId): array
     {
         return $this->all(
-            'SELECT w.*,
-                    (SELECT TOP 1 image_url FROM gallery
-                     WHERE entity_type=\'workspace\' AND entity_id=w.id
-                     ORDER BY is_main DESC, id DESC) AS main_image
-             FROM workspaces w
-             WHERE w.coworking_id = ?
-             ORDER BY w.price_per_hour ASC',
+            'SELECT w.*
+         FROM workspaces w
+         WHERE w.coworking_id = ?
+         ORDER BY w.price_per_hour ASC',
             [$coworkingId]
         );
     }

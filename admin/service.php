@@ -59,18 +59,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             case 'archive_table': {
                 $table = (string) ($_POST['archive_table'] ?? '');
-                $allowed = ['users','coworkings','workspaces','bookings','booking_slots',
-                            'reviews','audit_log','settings',
-                            'features','coworking_features','gallery','operating_hours'];
+
+                $allowed = [
+                        'users','coworkings','workspaces','bookings','booking_slots',
+                        'reviews','audit_log','settings',
+                        'features','coworking_features','gallery','operating_hours'
+                ];
+
                 if (!in_array($table, $allowed, true)) {
                     throw new \InvalidArgumentException('Неприпустима таблиця.');
                 }
-                $archiveDir = $settings->get('archive_path', '/tmp/cowork_archives') ?: '/tmp/cowork_archives';
+
+                $archiveDir = $settings->get('archive_path', '/tmp/cowork_archives')
+                        ?: '/tmp/cowork_archives';
+
+                if (!is_dir($archiveDir)) {
+                    mkdir($archiveDir, 0777, true);
+                }
+
                 $file = rtrim($archiveDir, '/\\') . '/' . "{$table}_" . date('Ymd_His') . '.csv';
+
                 $rows = $svc->archiveTableToCsv($table, $file);
-                $audit->log($adminId, $adminName, 'ARCHIVE', $table, null,
-                    "Архівовано {$rows} рядків у {$file}");
-                flashSet(FlashType::Ok, "Таблицю {$table} архівовано ({$rows} рядків) у {$file}");
+
+                $content = file_get_contents($file);
+                if (substr($content, 0, 3) !== "\xEF\xBB\xBF") {
+                    file_put_contents($file, "\xEF\xBB\xBF" . $content);
+                }
+
+                $audit->log(
+                        $adminId,
+                        $adminName,
+                        'ARCHIVE',
+                        $table,
+                        null,
+                        "Архівовано {$rows} рядків у {$file}"
+                );
+
+                flashSet(
+                        FlashType::Ok,
+                        "Таблицю {$table} архівовано ({$rows} рядків) у {$file}"
+                );
+
                 break;
             }
 

@@ -7,13 +7,13 @@ class CoworkingModel extends Db
     private function baseSelect(): string
     {
         return "SELECT c.*,
-                       (SELECT TOP 1 image_url FROM gallery
-                        WHERE entity_type='coworking' AND entity_id=c.id
-                        ORDER BY is_main DESC, id DESC) AS main_image,
-                       (SELECT AVG(CAST(rating AS FLOAT)) FROM reviews WHERE coworking_id=c.id) AS avg_rating,
-                       (SELECT COUNT(*) FROM reviews WHERE coworking_id=c.id) AS reviews_count,
-                       (SELECT MIN(price_per_hour) FROM workspaces WHERE coworking_id=c.id) AS price_from
-                FROM coworkings c";
+                   (SELECT TOP 1 image_url FROM gallery
+                    WHERE entity_id = c.id
+                    ORDER BY is_main DESC, id DESC) AS main_image,
+                   (SELECT AVG(CAST(rating AS FLOAT)) FROM reviews WHERE coworking_id = c.id) AS avg_rating,
+                   (SELECT COUNT(*) FROM reviews WHERE coworking_id = c.id) AS reviews_count,
+                   (SELECT MIN(price_per_hour) FROM workspaces WHERE coworking_id = c.id) AS price_from
+            FROM coworkings c";
     }
 
     public function findById(int $id): ?array
@@ -69,13 +69,18 @@ class CoworkingModel extends Db
     {
         $where = "c.latitude IS NOT NULL AND c.longitude IS NOT NULL";
         $params = [];
-        if ($city) { $where .= ' AND c.city = ?'; $params[] = $city; }
+
+        if ($city) {
+            $where .= ' AND c.city = ?';
+            $params[] = $city;
+        }
+
         return $this->all(
             "SELECT c.id, c.name, c.address, c.city, c.latitude, c.longitude,
-                    (SELECT TOP 1 image_url FROM gallery
-                     WHERE entity_type='coworking' AND entity_id=c.id
-                     ORDER BY is_main DESC, id DESC) AS main_image
-             FROM coworkings c WHERE {$where}",
+                (SELECT TOP 1 image_url FROM gallery
+                 WHERE entity_id = c.id
+                 ORDER BY is_main DESC, id DESC) AS main_image
+         FROM coworkings c WHERE {$where}",
             $params
         );
     }

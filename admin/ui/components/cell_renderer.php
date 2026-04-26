@@ -33,11 +33,7 @@ function renderCell(AdminTable $table, string $col, array $row): string
             return '<span class="badge ' . h($e->badgeClass()) . '">' . h($e->label()) . '</span>';
         })(),
 
-        // ── Тип entity галереї ────────────────────────────────────────────
-        $col === 'entity_type' && GalleryEntityType::tryFrom($str) !== null => (function () use ($str): string {
-            $e = GalleryEntityType::from($str);
-            return '<span class="badge b-blue">' . h($e->label()) . '</span>';
-        })(),
+        $col === 'entity_id' => '<span class="badge b-blue">Coworking</span>',
 
         // ── is_main галерея ───────────────────────────────────────────────
         $col === 'is_main' => (function () use ($raw): string {

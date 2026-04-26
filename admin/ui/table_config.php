@@ -64,14 +64,27 @@ function tableFormConfig(AdminTable $table): array
         ],
 
         AdminTable::Gallery => [
-            'entity_type' => ['type' => FormFieldType::Select, 'label' => 'Тип об\'єкта', 'req' => true,
-                              'options' => GalleryEntityType::options()],
-            'entity_id'   => ['type' => FormFieldType::Number, 'label' => 'ID об\'єкта',  'req' => true,
-                              'hint' => 'ID коворкінгу або робочого місця'],
-            'image_url'   => ['type' => FormFieldType::Url,    'label' => 'URL фото',     'req' => true, 'span' => 'full',
-                              'hint' => 'Пряме посилання на зображення (https://...)'],
-            'is_main'     => ['type' => FormFieldType::Select, 'label' => 'Головне фото?','req' => false,
-                              'options' => ['0' => 'Ні', '1' => 'Так']],
+            'entity_id' => [
+                'type' => FormFieldType::Number,
+                'label' => "ID коворкінгу",
+                'req' => true,
+                'hint' => 'ID коворкінгу (entity_id тепер завжди = coworking_id)'
+            ],
+
+            'image_url' => [
+                'type' => FormFieldType::Url,
+                'label' => 'URL фото',
+                'req' => true,
+                'span' => 'full',
+                'hint' => 'Пряме посилання на зображення (https://...)'
+            ],
+
+            'is_main' => [
+                'type' => FormFieldType::Select,
+                'label' => 'Головне фото?',
+                'req' => false,
+                'options' => ['0' => 'Ні', '1' => 'Так']
+            ],
         ],
 
         AdminTable::Bookings => [

@@ -16,8 +16,8 @@ $perPage  = 20;
 // Фільтри (GET)
 $filters = [];
 foreach (['search','city','status','role','type_key','coworking_id','workspace_id',
-          'feature_id','entity_type','is_main','is_closed','is_24_7','rating',
-          'sort','dir','booking_id'] as $fk) {
+             'feature_id','is_main','is_closed','is_24_7','rating',
+             'sort','dir','booking_id'] as $fk) {
     if (isset($_GET[$fk]) && $_GET[$fk] !== '') {
         $filters[$fk] = trim($_GET[$fk]);
     }
@@ -290,25 +290,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $table !== null) {
         // ── Gallery ───────────────────────────────────────────────────────────
         elseif ($table === AdminTable::Gallery) {
             require_once __DIR__ . '/db/GalleryRepository.php';
-            $repo       = new GalleryRepository();
-            $typeRaw    = trim($_POST['entity_type'] ?? '');
-            $entityId   = (int) ($_POST['entity_id'] ?? 0);
-            $imageUrl   = trim($_POST['image_url'] ?? '');
-            $isMain     = (bool)(int)($_POST['is_main'] ?? 0);
-            $entityType = GalleryEntityType::tryFrom($typeRaw);
+            require_once __DIR__ . '/db/CoworkingRepository.php';
 
-            if ($entityType === null || !$repo->entityExists($entityType, $entityId)) {
+            $repo        = new GalleryRepository();
+            $coworkingRp = new CoworkingRepository();
+
+            $entityId = (int) ($_POST['entity_id'] ?? 0); // це coworking_id
+            $imageUrl = trim($_POST['image_url'] ?? '');
+            $isMain   = (bool)(int)($_POST['is_main'] ?? 0);
+
+            // перевірка існування коворкінгу
+            if ($entityId <= 0 || !$coworkingRp->exists($entityId)) {
                 $warnReason  = WarnReason::GalleryEntityNotFound;
                 $warnDetails = [
-                    "Тип: " . ($entityType?->label() ?? "«{$typeRaw}»"),
-                    "ID: {$entityId}",
+                    "Коворкінг ID: {$entityId}"
                 ];
             } else {
                 if ($action === 'add') {
-                    $repo->create($entityType, $entityId, $imageUrl, $isMain);
+                    $repo->create($entityId, $imageUrl, $isMain);
                     flashSet(FlashType::Ok, 'Фото додано до галереї.');
                 } else {
-                    $repo->update($id, $entityType, $entityId, $imageUrl, $isMain);
+                    $repo->update($id, $entityId, $imageUrl, $isMain);
                     flashSet(FlashType::Ok, 'Фото оновлено.');
                 }
             }

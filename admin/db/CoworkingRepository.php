@@ -63,6 +63,14 @@ class CoworkingRepository extends BaseRepository
         return $this->fetchAll('SELECT id, name FROM coworkings ORDER BY name');
     }
 
+    public function exists(int $id): bool
+    {
+        return (bool) $this->fetchOne(
+            "SELECT 1 FROM coworkings WHERE id = ?",
+            [$id]
+        );
+    }
+
     private function buildFilters(array $filters): array
     {
         $conds  = ['1=1'];

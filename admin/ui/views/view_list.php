@@ -12,7 +12,7 @@ $columns = match ($table) {
     AdminTable::OperatingHours    => ['id', 'coworking_name', 'day_of_week', 'open_time', 'close_time', 'is_closed'],
     AdminTable::Features          => ['id', 'name', 'icon_key'],
     AdminTable::CoworkingFeatures => ['coworking_id', 'coworking_name', 'feature_id', 'feature_name', 'icon_key'],
-    AdminTable::Gallery           => ['id', 'entity_type', 'entity_id', 'is_main', 'image_url'],
+    AdminTable::Gallery           => ['id', 'entity_id', 'is_main', 'image_url'],
     AdminTable::Bookings          => ['id', 'user_name', 'workspace_name', 'coworking_name', 'status', 'total_price', 'created_at'],
     AdminTable::BookingSlots      => ['id', 'booking_id', 'user_name', 'workspace_name', 'start_time', 'end_time', 'booking_status'],
     AdminTable::Reviews           => ['id', 'user_name', 'coworking_name', 'rating', 'comment', 'created_at'],
@@ -42,7 +42,6 @@ $colLabels = [
     'feature_id'       => 'ID зруч.',
     'feature_name'     => 'Зручність',
     'coworking_id'     => 'ID кв.',
-    'entity_type'      => 'Тип',
     'entity_id'        => 'ID об.',
     'is_main'          => 'Головне',
     'image_url'        => 'Фото',
@@ -74,7 +73,7 @@ function sortUrl(string $base, string $col, string $curSort, string $curDir): st
 // Відновлюємо фільтри в URL для пагінації
 $filterQuery = '';
 foreach (['search', 'city', 'status', 'role', 'type_key', 'coworking_id', 'workspace_id',
-          'feature_id', 'entity_type', 'is_main', 'is_closed', 'is_24_7', 'rating', 'sort', 'dir'] as $fk) {
+          'feature_id', 'is_main', 'is_closed', 'is_24_7', 'rating', 'sort', 'dir'] as $fk) {
     if (!empty($filters[$fk])) {
         $filterQuery .= '&' . urlencode($fk) . '=' . urlencode($filters[$fk]);
     }
@@ -108,8 +107,11 @@ $filterConfig = match ($table) {
         'feature_id'   => ['type' => 'rel', 'placeholder' => 'Всі зручності',  'rel' => 'features'],
     ],
     AdminTable::Gallery => [
-        'entity_type' => ['type' => 'select', 'placeholder' => 'Всі типи', 'options' => GalleryEntityType::options()],
-        'is_main'     => ['type' => 'select', 'placeholder' => 'Всі фото', 'options' => ['1' => 'Головні', '0' => 'Звичайні']],
+            'is_main' => [
+                    'type' => 'select',
+                    'placeholder' => 'Всі фото',
+                    'options' => ['1' => 'Головні', '0' => 'Звичайні']
+            ],
     ],
     AdminTable::Bookings => [
         'search'       => ['type' => 'text',   'placeholder' => 'Пошук по користувачу'],
